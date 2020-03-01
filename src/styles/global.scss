@@ -1,3 +1,8 @@
+/* override typography.js link text shadows */
+a {
+    text-shadow: none;
+}
+
 #tufte-d3-project {
     background-image: url('../images/project-grid/minard.png');
 }
@@ -8,4 +13,16 @@
         rgba(0, 0, 0, 0.5)
     ),
     url('../images/project-grid/minard.png');
+}
+
+#kindle-clippings-project {
+    background-image: url('../images/project-grid/kindle-clippings.jpg');
+}
+
+#kindle-clippings-project:hover {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ),
+    url('../images/project-grid/kindle-clippings.jpg');
 }
