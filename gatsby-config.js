@@ -5,5 +5,21 @@
  */
 
 module.exports = {
-  /* Your site config here */
+  plugins: [
+    'gatsby-plugin-sass',
+    {
+      resolve: 'gatsby-plugin-typography',
+      options: {
+        pathToConfigModule: 'src/utils/typography'
+      },
+    },
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: 'files',
+        path: `${__dirname}/src/markdown`
+      }
+    },
+    'gatsby-transformer-remark'
+  ],
 }
