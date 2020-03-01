@@ -1,0 +1,38 @@
+.project-item {
+    padding: 0;
+}
+
+.project-item-outer {
+    height: 280px;
+    overflow: hidden;
+}
+
+.project-item-inner {
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    transition: all 0.5s ease;
+}
+
+.project-item-inner:hover {
+    transform: scale(1.05);
+}
+
+.project-item-inner:hover .overlay {
+    opacity: 1;
+}
+
+.overlay {
+    transition: 0.5s ease;
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.overlay-title {
+    color: #fff;
+}
