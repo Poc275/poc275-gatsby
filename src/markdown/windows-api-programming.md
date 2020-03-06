@@ -1,9 +1,9 @@
 ---
-title: "Kindle Clippings"
-date: "2019-09-19"
+title: "Windows API Programming"
+date: "2010-05-04"
 image: "https://source.unsplash.com/150x150/?gatsbyjs"
 keywords: "blog"
-class: "kindle-clippings-project"
+class: "windows-api-project"
 link: null
 ---
 

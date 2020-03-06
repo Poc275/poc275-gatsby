@@ -1,9 +1,9 @@
 ---
-title: "Kindle Clippings"
-date: "2019-09-19"
+title: "Language Design & Implementation"
+date: "2013-05-12"
 image: "https://source.unsplash.com/150x150/?gatsbyjs"
 keywords: "blog"
-class: "kindle-clippings-project"
+class: "frooble-project"
 link: null
 ---
 

@@ -1,9 +1,9 @@
 ---
-title: "Kindle Clippings"
-date: "2019-09-19"
+title: "Website Redesign & Report"
+date: "2008-05-06"
 image: "https://source.unsplash.com/150x150/?gatsbyjs"
 keywords: "blog"
-class: "kindle-clippings-project"
+class: "website-redesign-project"
 link: null
 ---
 

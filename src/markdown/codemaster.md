@@ -1,9 +1,9 @@
 ---
-title: "Kindle Clippings"
-date: "2019-09-19"
+title: "Codemaster Android App"
+date: "2011-05-02"
 image: "https://source.unsplash.com/150x150/?gatsbyjs"
 keywords: "blog"
-class: "kindle-clippings-project"
+class: "codemaster-project"
 link: null
 ---
 

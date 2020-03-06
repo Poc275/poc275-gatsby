@@ -1,9 +1,9 @@
 ---
-title: "Kindle Clippings"
-date: "2019-09-19"
+title: "Text Analyser"
+date: "2009-05-01"
 image: "https://source.unsplash.com/150x150/?gatsbyjs"
 keywords: "blog"
-class: "kindle-clippings-project"
+class: "text-analyser-project"
 link: null
 ---
 

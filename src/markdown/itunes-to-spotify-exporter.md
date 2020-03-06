@@ -1,10 +1,10 @@
 ---
-title: "Tufte in D3.js"
-date: "2019-01-02"
+title: "iTunes to Spotify Exporter"
+date: "2017-01-05"
 image: "https://source.unsplash.com/150x150/?gatsbyjs"
 keywords: "blog"
-class: "tufte-d3-project"
-link: "tufte-d3-prohject.html"
+class: "itunes-to-spotify-project"
+link: null
 ---
 
 #If you are reading this, you know Gatsby is awesome!
