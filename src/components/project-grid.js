@@ -11,6 +11,9 @@ export default () => (
                 edges {
                     node {
                         id
+                        fields {
+                            slug
+                        }
                         frontmatter {
                             title
                             image
@@ -28,6 +31,7 @@ export default () => (
                                  title={node.frontmatter.title} 
                                  image={node.frontmatter.image}
                                  class={node.frontmatter.class}
+                                 link={node.fields.slug}
                         />
                     ))}
                 </Row>
