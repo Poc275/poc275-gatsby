@@ -1,15 +1,15 @@
-#about-me {
+.about-me {
     background-color: #343A40;
     margin: 5rem 0;
 }
 
-#about-me-code {
+.about-me-code {
     font-family: 'Consolas';
     color: #C8C8C8;
     margin-bottom: 2rem;
 }
 
-#about-me-code p {
+.about-me-code p {
     margin-bottom: 0;
     font-size: 1rem;
 }
@@ -17,12 +17,12 @@
 /* on larger screens (md) make the code 
     font size larger to fill the space */
 @media (min-width: 768px) {
-    #about-me-code p {
+    .about-me-code p {
         font-size: 1.5vw;
     }
 }
 
-#mugshot {
+.mugshot {
     width: 100px;
     border-radius: 50px;
     margin: 1rem 0;

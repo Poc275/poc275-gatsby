@@ -24,7 +24,7 @@ export default () => (
             }
         }`}
         render={data => (
-            <Container fluid={true}>
+            <Container fluid={true} id="my-work">
                 <Row>
                     {data.allMarkdownRemark.edges.map(({node}) => (
                         <Project key={node.id} 

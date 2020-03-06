@@ -6,14 +6,14 @@ import styles from './about.module.scss'
 import Mugshot from '../images/pete-mugshot.jpg'
 
 export default () => (
-    <Container fluid={true} id={styles.aboutMe}>
+    <Container fluid={true} className={styles.aboutMe} id="about-me">
         <Row>
             <Col md={{ span: 8, offset: 2}} className="text-center">
-                <img src={Mugshot} alt="yours truly" id={styles.mugshot} />
+                <img src={Mugshot} alt="yours truly" className={styles.mugshot} />
             </Col>
         </Row>
         <Row>
-            <Col md={{ span: 8, offset: 2}} id={styles.aboutMeCode}>
+            <Col md={{ span: 8, offset: 2}} className={styles.aboutMeCode}>
                 <p><span className={styles.comment}>{'//'} About Me...</span></p>
                 <p><span className={styles.class}>Developer</span> me = <span className={styles.new}>new</span><span className={styles.class}> Developer</span></p>
                 <p>{'{'}</p>
