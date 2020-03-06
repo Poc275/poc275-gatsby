@@ -3,6 +3,20 @@ a {
     text-shadow: none;
 }
 
+/* colour */
+a {
+    transition: border-color .5s;
+    text-decoration: none;
+    border-bottom: 3px solid #fff;
+    color: #f2545b;
+}
+
+a:hover {
+    text-decoration: none;
+    border-bottom: 3px solid #f2545b;
+    color: #2f2f2f;
+}
+
 /* project grid */
 #tufte-d3-project {
     background-image: url('../images/project-grid/minard.png');
