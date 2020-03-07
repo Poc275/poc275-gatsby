@@ -1,0 +1,25 @@
+.footer-links {
+    text-align: center;
+}
+
+a {
+    background-image: none;
+}
+
+.footer-links a:hover {
+    text-decoration: none;
+}
+
+.gatsby-image {
+    padding-bottom: 5px;
+    width: 25px;
+}
+
+.emoji-size {
+    font-size: larger;
+}
+
+/* override typography.js image margins */
+img {
+    margin-bottom: 0;
+}

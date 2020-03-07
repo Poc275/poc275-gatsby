@@ -5,6 +5,7 @@ import Menu from "../components/menu"
 import Welcome from "../components/welcome"
 import ProjectGrid from "../components/project-grid"
 import About from "../components/about"
+import Footer from "../components/footer"
 
 export default () => (
     <Layout>
@@ -12,5 +13,6 @@ export default () => (
         <Welcome />
         <ProjectGrid />
         <About />
+        <Footer />
     </Layout>
 )
