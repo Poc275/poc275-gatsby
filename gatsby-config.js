@@ -20,6 +20,23 @@ module.exports = {
         path: `${__dirname}/src/markdown`
       }
     },
-    'gatsby-transformer-remark'
+    {
+      resolve: 'gatsby-source-filesystem',
+      options: {
+        name: 'files',
+        path: `${__dirname}/src/markdown/images`
+      }
+    },
+    {
+      resolve: 'gatsby-plugin-mdx',
+      options: {
+        plugins: [
+          {
+            resolve: 'gatsby-remark-images',
+          }
+        ]
+      }
+    },
+    'gatsby-plugin-sharp'
   ],
 }

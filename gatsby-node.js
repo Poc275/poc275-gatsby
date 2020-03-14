@@ -8,12 +8,28 @@ const { createFilePath } = require('gatsby-source-filesystem')
 // for resolving paths to our template components
 const path = require('path')
 
+exports.createSchemaCustomization = ({ actions }) => {
+    const { createTypes } = actions
+    const typeDefs = `
+        type BlogPost implements Node {
+            title: String,
+            date: Date,
+            image: String,
+            keywords: String,
+            class: String,
+            static: Boolean,
+            link: String 
+        }
+    `
+    createTypes(typeDefs)
+}
+
 // onCreateNode is called once per node, in Gatsby a node is a data source
 // e.g. File, MarkdownRemark, SitePage etc.
-exports.onCreateNode = ({node, getNode, actions}) => {
+exports.onCreateNode = ({node, getNode, actions}) => {    
     // Create friendly URLs for our markdown blog posts
-    if(node.internal.type === 'MarkdownRemark') {
-        // console.log(`*** I am processing a node with type: ${node.frontmatter.link}`)
+    if(node.internal.type === 'Mdx') {
+        // console.log(`*** I am processing a node with type: ${node.internal.type}`)
 
         // to add the friendly url to the markdown node we use 
         // createNodeField, which we extract from the actions 
@@ -29,7 +45,7 @@ exports.onCreateNode = ({node, getNode, actions}) => {
         // looks in production and they will work
         //
         // basePath is the folder where our markdown files live
-        const slug = node.frontmatter.link ? node.frontmatter.link : createFilePath({node, getNode, basePath: 'markdown'})
+        const slug = node.frontmatter.static ? node.frontmatter.link : createFilePath({node, getNode, basePath: 'markdown'})
         // const slug = createFilePath({node, getNode, basePath: 'markdown'})
         
         // Assign the field, now we have a 'slug' prop available in our markdown
@@ -51,7 +67,7 @@ exports.createPages = ({graphql, actions}) => {
     return new Promise(resolve => {
         graphql(`
             {
-                allMarkdownRemark {
+                allMdx {
                     edges {
                         node {
                             frontmatter {
@@ -65,10 +81,10 @@ exports.createPages = ({graphql, actions}) => {
                 }
             }
         `).then(result => {
-            result.data.allMarkdownRemark.edges.forEach(({node}) => {
+            result.data.allMdx.edges.forEach(({node}) => {
                 // createPage from each node if not a "static" page 
                 // i.e. one with a link set in the frontmatter
-                if(node.frontmatter.link === null) {
+                if(!node.frontmatter.static) {
                     createPage({
                         path: node.fields.slug,
                         component: path.resolve('./src/templates/post.js'),
