@@ -1,13 +1,22 @@
 import React from 'react'
+import ProjectHeader from '../components/project-header'
 import { graphql } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
+import styles from './post.module.scss'
 
 // This is our template component for a blog post retrieved from markdown files
 export default ({ data }) => {
     const post = data.mdx
 
     return (
-        <MDXRenderer>{post.body}</MDXRenderer>
+        <div>
+          <ProjectHeader metadata={post.frontmatter} />
+          <div className={styles.postBody}>
+            <MDXRenderer>
+              {post.body}
+            </MDXRenderer>
+          </div>
+        </div>
     )
 }
 
@@ -18,7 +27,18 @@ export const query = graphql`
       body
       frontmatter {
         title
-        keywords
+        demo
+        period
+        image
+        languages
+        tools
+        featuredImage {
+          childImageSharp {
+            fluid(maxWidth: 1200) {
+              ...GatsbyImageSharpFluid
+            }
+          }
+        }
       }
     }
   }

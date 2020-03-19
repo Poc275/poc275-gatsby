@@ -14,8 +14,11 @@ exports.createSchemaCustomization = ({ actions }) => {
         type BlogPost implements Node {
             title: String,
             date: Date,
+            period: String,
             image: String,
-            keywords: String,
+            languages: String,
+            tools: String,
+            demo: String,
             class: String,
             static: Boolean,
             link: String 

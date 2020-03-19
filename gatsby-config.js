@@ -7,6 +7,22 @@
 module.exports = {
   plugins: [
     'gatsby-plugin-sass',
+    'gatsby-plugin-sharp',
+    'gatsby-transformer-sharp',
+    {
+      resolve: 'gatsby-plugin-mdx',
+      options: {
+        gatsbyRemarkPlugins: [
+          'gatsby-remark-unwrap-images',
+          {
+            resolve: 'gatsby-remark-images',
+            options: {
+              maxWidth: 600
+            }
+          }
+        ]
+      }
+    },
     {
       resolve: 'gatsby-plugin-typography',
       options: {
@@ -16,27 +32,14 @@ module.exports = {
     {
       resolve: 'gatsby-source-filesystem',
       options: {
-        name: 'files',
         path: `${__dirname}/src/markdown`
       }
     },
     {
       resolve: 'gatsby-source-filesystem',
       options: {
-        name: 'files',
         path: `${__dirname}/src/markdown/images`
       }
-    },
-    {
-      resolve: 'gatsby-plugin-mdx',
-      options: {
-        plugins: [
-          {
-            resolve: 'gatsby-remark-images',
-          }
-        ]
-      }
-    },
-    'gatsby-plugin-sharp'
+    }
   ],
 }

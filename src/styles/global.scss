@@ -17,6 +17,26 @@ a {
 //     color: #2f2f2f!important;
 // }
 
+/* figure styling */
+.gatsby-resp-image-figcaption {
+    color: grey;
+}
+
+.gatsby-resp-image-figcaption::before {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f030";
+}
+
+.gatsby-resp-image-background-image {
+    border-radius: .25rem;
+}
+
 /* project grid */
 #tufte-d3-project {
     background-image: url('../images/project-grid/minard.png');
