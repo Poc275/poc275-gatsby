@@ -1,3 +1,21 @@
+@media (max-width: 727.98px) {
+    .project-meta {
+        margin: 0 1.2rem;
+    }
+}
+
+@media (max-width: 903.98px) and (min-width: 728px) {
+    .project-meta {
+        margin: 0 2.4rem;
+    }
+}
+
+@media (min-width: 904px) {
+    .project-meta {
+        margin: 0 3.2rem;
+    }
+}
+
 .project-header {
     height: 80vh;
 }
@@ -8,7 +26,6 @@
     bottom: 0;
     color: #fff;
     display: inline-block;
-    padding: 0 0 0 1rem;
 }
 
 .project-meta h1 {
