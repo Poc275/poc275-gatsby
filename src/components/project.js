@@ -6,7 +6,7 @@ import { Link } from 'gatsby'
 export default (props) => {
     // check if this is a static page or a markdown "dynamic" page 
     // to choose the correct linking mechansim (<a> or <Link>)
-    const project = props.link.endsWith('.html') ? 
+    const project = props.static ? 
         // static page, use <a>
         <a href={props.link}>
             <div className={styles.projectItemInner} id={props.class}>

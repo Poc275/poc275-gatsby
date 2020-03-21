@@ -16,8 +16,8 @@ export default () => (
                         }
                         frontmatter {
                             title
-                            image
                             class
+                            static
                         }
                     }
                 }
@@ -29,9 +29,9 @@ export default () => (
                     {data.allMdx.edges.map(({node}) => (
                         <Project key={node.id} 
                                  title={node.frontmatter.title} 
-                                 image={node.frontmatter.image}
                                  class={node.frontmatter.class}
                                  link={node.fields.slug}
+                                 static={node.frontmatter.static}
                         />
                     ))}
                 </Row>

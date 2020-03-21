@@ -29,7 +29,6 @@ export const query = graphql`
         title
         demo
         period
-        image
         languages
         tools
         featuredImage {

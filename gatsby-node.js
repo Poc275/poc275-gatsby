@@ -14,11 +14,10 @@ exports.createSchemaCustomization = ({ actions }) => {
         type BlogPost implements Node {
             title: String,
             date: Date,
-            period: String,
-            image: String,
-            languages: String,
-            tools: String,
-            demo: String,
+            period: String!,
+            languages: String!,
+            tools: String!,
+            demo: String!,
             class: String,
             static: Boolean,
             link: String 
@@ -74,7 +73,7 @@ exports.createPages = ({graphql, actions}) => {
                     edges {
                         node {
                             frontmatter {
-                                link
+                                static
                             }
                             fields {
                                 slug
