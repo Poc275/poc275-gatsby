@@ -12,6 +12,8 @@ export default (props) => {
         <p><span role="img" aria-label="demo">🔗 </span><a href={props.metadata.demo}>View</a></p>
     : null;
 
+    const subtitle = props.metadata.subtitle ? <h2>{props.metadata.subtitle}</h2> : null
+
     return (
         <div>
             <BackgroundImage
@@ -24,6 +26,7 @@ export default (props) => {
             >
                 <div className={styles.projectMeta}>
                     <h1>{props.metadata.title}</h1>
+                    {subtitle}
                     <p><span role="img" aria-label="date made" title="Date Made">📅 </span>{props.metadata.period}</p>
                     <p><span role="img" aria-label="built with" title="Built With">🔨 </span>{props.metadata.languages}</p>
                     <p><span role="img" aria-label="tools used" title="Tools Used">🔧 </span>{props.metadata.tools}</p>

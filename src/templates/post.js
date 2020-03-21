@@ -27,6 +27,7 @@ export const query = graphql`
       body
       frontmatter {
         title
+        subtitle
         demo
         period
         languages

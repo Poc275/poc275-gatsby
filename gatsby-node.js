@@ -13,6 +13,7 @@ exports.createSchemaCustomization = ({ actions }) => {
     const typeDefs = `
         type BlogPost implements Node {
             title: String,
+            subtitle: String!,
             date: Date,
             period: String!,
             languages: String!,
