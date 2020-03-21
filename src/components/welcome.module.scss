@@ -1,3 +1,12 @@
 #intro {
     height: 70vh;
 }
+
+/* break emojis onto their own lines when the 
+ header text wraps, otherwise it looks cramped */
+@media (max-width: 1199.98px) {
+    span {
+        display: block;
+        margin: 1rem 0;
+    }
+}
