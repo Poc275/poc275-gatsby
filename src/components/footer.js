@@ -11,24 +11,24 @@ export default () => (
     <Container id="contact">
         <Row>
             <Col md={{ span: 8, offset: 2}} className={styles.footerLinks}>
-                <a href="mailto:poc275@gmail.com" className="mx-3" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faEnvelope} size="3x" />
+                <a href="mailto:poc275@gmail.com" className="mx-2" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faEnvelope} size="2x" />
                 </a>
 
-                <a href="https://github.com/Poc275" className="mx-3" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faGithub} size="3x" />
+                <a href="https://github.com/Poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faGithub} size="2x" />
                 </a>
 
-                <a href="https://stackoverflow.com/story/poc275" className="mx-3" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faStackOverflow} size="3x" />
+                <a href="https://stackoverflow.com/story/poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faStackOverflow} size="2x" />
                 </a>
 
-                <a href="https://linkedin.com/in/poc275" className="mx-3" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faLinkedinIn} size="3x" />
+                <a href="https://linkedin.com/in/poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faLinkedinIn} size="2x" />
                 </a>
 
-                <a href="https://medium.com/@poc275" className="mx-3" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faMediumM} size="3x" />
+                <a href="https://medium.com/@poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faMediumM} size="2x" />
                 </a>
             </Col>
         </Row>
