@@ -5,14 +5,14 @@ import styles from './project-header.module.scss'
 export default (props) => {
     const backgroundImageStack = [
         'linear-gradient(to bottom, rgba(12, 16, 28, 0) 0%, rgba(12, 16, 28, 0.65) 65%, rgba(12, 16, 28, 0.65) 66%)',
-        props.metadata.featuredImage.childImageSharp.fluid
+        props.metadata.frontmatter.featuredImage.childImageSharp.fluid
     ]
 
-    const demoLink = props.metadata.demo ? 
-        <p><span role="img" aria-label="demo">🔗 </span><a href={props.metadata.demo}>View</a></p>
+    const demoLink = props.metadata.frontmatter.demo ? 
+        <li><span role="img" aria-label="demo">🔗 </span><a href={props.metadata.frontmatter.demo}>Demo</a></li>
     : null;
 
-    const subtitle = props.metadata.subtitle ? <h2>{props.metadata.subtitle}</h2> : null
+    const subtitle = props.metadata.frontmatter.subtitle ? <h4>{props.metadata.frontmatter.subtitle}</h4> : null
 
     return (
         <div>
@@ -25,12 +25,21 @@ export default (props) => {
                 }}
             >
                 <div className={styles.projectMeta}>
-                    <h1>{props.metadata.title}</h1>
+                    <h1>{props.metadata.frontmatter.title}</h1>
                     {subtitle}
-                    <p><span role="img" aria-label="date made" title="Date Made">📅 </span>{props.metadata.period}</p>
-                    <p><span role="img" aria-label="built with" title="Built With">🔨 </span>{props.metadata.languages}</p>
-                    <p><span role="img" aria-label="tools used" title="Tools Used">🔧 </span>{props.metadata.tools}</p>
-                    {demoLink}
+                    <ul className={styles.projectMetaList}>
+                        <li>
+                            <span className={styles.metadataEmoji} role="img" aria-label="date made" title="Date Made">📅 {props.metadata.frontmatter.period}</span>
+                            <span className={styles.metadataSeparator}>&nbsp; · &nbsp;</span>
+                            <span className={styles.metadataEmoji} role="img" aria-label="date made" title="Date Made">⏲️ {props.metadata.timeToRead} min read</span>
+                        </li>
+                        <li>
+                            <span className={styles.metadataEmoji} role="img" aria-label="built with" title="Built With">🔨 {props.metadata.frontmatter.languages}</span>
+                            <span className={styles.metadataSeparator}>&nbsp; · &nbsp;</span>
+                            <span className={styles.metadataEmoji} role="img" aria-label="tools used" title="Tools Used">🔧 {props.metadata.frontmatter.tools}</span>
+                        </li>
+                        {demoLink}
+                    </ul>
                 </div>
             </BackgroundImage>
         </div>

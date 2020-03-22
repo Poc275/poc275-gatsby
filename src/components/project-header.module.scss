@@ -16,6 +16,20 @@
     }
 }
 
+/* put metadata elements on separate lines on 
+smaller screens otherwise it looks cramped when wrapped */
+@media (max-width: 727.98px) {
+    .metadata-emoji {
+        display: block;
+        margin: 1rem 0;
+    }
+
+    /* hide the separator glyph as it's no longer needed */
+    .metadata-separator {
+        display: none;
+    }
+}
+
 .project-header {
     height: 80vh;
 }
@@ -25,10 +39,16 @@
     position: absolute;
     bottom: 0;
     color: #fff;
-    display: inline-block;
+    // display: inline-block;
+}
+
+.project-meta-list {
+    list-style-type: none;
 }
 
 .project-meta h1,
-.project-meta h2 {
+.project-meta h4,
+.project-meta p {
     color: #fff;
+    text-shadow: 0 0 50px hsla(0, 0%, 0%, 0.6);
 }

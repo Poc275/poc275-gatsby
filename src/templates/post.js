@@ -10,7 +10,8 @@ export default ({ data }) => {
 
     return (
         <div>
-          <ProjectHeader metadata={post.frontmatter} />
+          <ProjectHeader metadata={post} />
+
           <div className={styles.postBody}>
             <MDXRenderer>
               {post.body}
@@ -25,6 +26,7 @@ export const query = graphql`
   query($slug: String!) {
     mdx(fields: { slug: { eq: $slug } }) {
       body
+      timeToRead
       frontmatter {
         title
         subtitle
