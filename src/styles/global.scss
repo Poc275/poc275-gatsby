@@ -24,6 +24,15 @@ ol {
     margin-left: 0!important;
 }
 
+/* pulls blockquotes to the right */
+.quote-response {
+    text-align: right;
+    border-right: 0.54375rem solid #1ca086;
+    border-left: none;
+    padding-right: 0.90625rem;
+    padding-left: 0;
+}
+
 /* Images */
 .gatsby-resp-image-wrapper {
     max-width: 680px!important;
