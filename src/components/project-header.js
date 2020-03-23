@@ -4,7 +4,7 @@ import styles from './project-header.module.scss'
 
 export default (props) => {
     const backgroundImageStack = [
-        'linear-gradient(to bottom, rgba(12, 16, 28, 0) 0%, rgba(12, 16, 28, 0.65) 65%, rgba(12, 16, 28, 0.65) 66%)',
+        'linear-gradient(to bottom, rgba(12, 16, 28, 0.25) 0%, rgba(12, 16, 28, 0.85) 65%, rgba(12, 16, 28, 0.85) 66%)',
         props.metadata.frontmatter.featuredImage.childImageSharp.fluid
     ]
 
