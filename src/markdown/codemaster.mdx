@@ -1,0 +1,36 @@
+---
+title: "Codemaster Android App"
+date: 2011-05-18
+period: "January to May 2011"
+featuredImage: images/codemaster-project/code-master-android-app.png
+languages: "Java"
+tools: "Android"
+class: "codemaster-project"
+static: false
+link: ""
+demo: "https://play.google.com/store/apps/details?id=com.pete.assignment.codemaster"
+---
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera } from '@fortawesome/free-solid-svg-icons'
+import gameScreenshot from '../images/code-master-win.jpg'
+
+This project was my first attempt at making an Android app. It is a remake of the old board game Mastermind where the object of the game is to 
+crack a coloured code within an allotted number of attempts. Feedback pegs indicate how close you are to a correct guess after each turn.
+
+The project provided a different type of challenge because of the hardware limitations inherent in mobile devices. Due to the multi-tasking 
+nature of a mobile device, many applications will be running at any one time, meaning memory is at a premium. This warranted a judicious use 
+of new objects to minimise time spent garbage collecting, member variables were accessed directly instead of via getters and setters to speed 
+things up, and static classes were favoured over non-static to save on memory.
+
+One of the most important optimisations was the use of threads. The main thread drives the user interface loop, so if this is affected by 
+slow performance the user receives a not responding warning. This acute lack of responsiveness is particularly evident on touch screen 
+devices where users expect a much faster response to interactions than with a traditional mouse. Therefore any work that is potentially 
+time consuming is fired off onto a child thread, keeping the user interface responsive.
+
+<a href={gameScreenshot}>
+    <img src={gameScreenshot} alt="codemaster in game screenshot" />
+</a>
+<figcaption>
+    <FontAwesomeIcon icon={faCamera} /> In game screenshot showing the code being broken.
+</figcaption>
