@@ -42,6 +42,12 @@ ol {
     border-radius: .25rem;
 }
 
+/* prevent video from overflowing */
+video {
+    max-width: 100%;
+    border-radius: .25rem;
+}
+
 /* project grid */
 #tufte-d3-project {
     background-image: url('../images/project-grid/minard.png');
