@@ -1,0 +1,69 @@
+---
+title: "Dual N-Back"
+date: 2016-11-18
+period: "October to November 2016"
+featuredImage: images/dual-n-back-project/dual-n-back.jpg
+languages: "JavaScript"
+tools: "jQuery"
+class: "dual-nback-project"
+static: false
+link: ""
+demo: "/dual-n-back"
+---
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCamera } from '@fortawesome/free-solid-svg-icons'
+
+## Dual N-Back Training
+
+Dual N-Back training is an application that may, with daily training, improve a person's memory.
+
+This application is a replica of the Dual N-Back application that was used in Jaeggi, S., Buschkuehl, M., Jonides, J. and Perrig, W. (2008). Improving 
+fluid intelligence with training on working memory. Proceedings of the National Academy of Sciences of the United States of America, 105(19), pp. 6829-6833. 
+Further information available [on the original site](http://www.soakyourhead.com/Research.aspx), and 
+[in the research paper](http://www.pnas.org/content/105/19/6829.abstract).
+
+The application is a JavaScript conversion of the [original Silverlight version](http://www.soakyourhead.com/dual-n-back.aspx). As support for Silverlight 
+diminishes in most modern browsers, this conversion will hopefully help users continue to use Dual N-Back training.
+
+### How to play
+
+When you press the Start button, the application will begin by showing you a box and playing an audio recording of a letter. Remember where 
+the box appeared and also remember the letter. After a few seconds, another box appears and another letter is played. Remember these too. When 
+you start the game, it will start at the 2-back level (displayed across the top). This means that you need to remember if a letter was repeated 
+or a box appeared in the same location 2 times ago. For example:
+
+1. Top-right corner, letter 'F'.
+1. Bottom-right corner, letter 'G'.
+1. Top-right corner, letter 'S'.
+1. Bottom-middle, letter 'G'.
+
+For the first 2 ‘blocks’ you don't need to do anything because you are at the 2-back level (this obviously increases as you go up the levels). But 
+when the third block is presented you need to decide if it matches the position or the letter (or both) of block 1. Likewise, for block 4, does it 
+match either the position, letter, or both, of block 2, etc. etc. Press the letter <kbd>a</kbd> on the keyboard if the position matches, <kbd>l</kbd> if the 
+letter matches, or both if they both match.
+
+So, from the example above, when block 3 is presented, the position matches block 1 (top-right corner), but the letters do not. So, press <kbd>a</kbd>. For 
+block 4, the position doesn't match block 2, but the letter does, so press <kbd>l</kbd>. Remember blocks 3 and 4 to carry on. Each session has 20 blocks. At 
+the end of the session, if you have performed well, the level will increase to 3. So, you need to remember whenever the letter/square matches what was 
+said/displayed 3 times ago. The level can increase or decrease depending on your performance. An entire training run consists of 20 sessions. Finish the 
+entire run to see your results, which you can optionally save by toggling the save progress switch.
+
+Be aware that this is a difficult game. At first, it will be difficult to press the correct keys. Be assured that this was the same for the research 
+subjects when they first started. However, after enough practice, the subjects improved.
+
+For more information see the [demo on the original site](http://www.soakyourhead.com/dual-n-back.aspx). Note this requires Silverlight.
+
+### Bugs & Issues
+
+Have a bug or an issue? [Open a new issue](https://github.com/Poc275/NBack/issues) on GitHub.
+
+### References
+
+The original source code is available [here](http://www.soakyourhead.com/dual-n-back-open-source.aspx).
+
+Uses Start Bootstrap which was created by and maintained by [David Miller](http://davidmiller.io/), owner of [Blackrock Digital](http://blackrockdigital.io/).
+
+Uses [Bootstrap Toggle](http://www.bootstraptoggle.com/) for the toggle switch.
+
+[QUnit](https://qunitjs.com/) used for the unit tests.
