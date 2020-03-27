@@ -3,6 +3,7 @@ import ProjectHeader from '../components/project-header'
 import { graphql } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import styles from './post.module.scss'
+import SEO from '../components/seo'
 
 // This is our template component for a blog post retrieved from markdown files
 export default ({ data }) => {
@@ -10,6 +11,8 @@ export default ({ data }) => {
 
     return (
         <div>
+          <SEO title={post.frontmatter.title} description={post.excerpt} />
+          
           <ProjectHeader metadata={post} />
 
           <div className={styles.postBody}>
@@ -42,6 +45,7 @@ export const query = graphql`
           }
         }
       }
+      excerpt
     }
   }
 `

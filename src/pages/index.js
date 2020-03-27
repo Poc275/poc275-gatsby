@@ -5,9 +5,11 @@ import Welcome from "../components/welcome"
 import ProjectGrid from "../components/project-grid"
 import About from "../components/about"
 import Footer from "../components/footer"
+import SEO from '../components/seo'
 
 export default () => (
     <Layout>
+        <SEO title="poc275" description="My personal programming portfolio showcasing my programming projects" />
         <Menu />
         <Welcome />
         <ProjectGrid />

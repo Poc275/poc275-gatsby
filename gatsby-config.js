@@ -5,6 +5,11 @@
  */
 
 module.exports = {
+  siteMetadata: {
+    title: 'Peter O\'Connor\'s Programming Portfolio',
+    description: 'My Programming Portfolio',
+    author: 'Peter O\'Connor',
+  },
   plugins: [
     'gatsby-plugin-sass',
     'gatsby-plugin-sharp',
@@ -40,6 +45,22 @@ module.exports = {
       options: {
         path: `${__dirname}/src/markdown/images`
       }
-    }
+    },
+    {
+      resolve: 'gatsby-plugin-manifest',
+      options: {
+        name: 'Peter O\'Connor Personal Portfolio',
+        short_name: 'poc275',
+        description: 'My personal programming portfolio',
+        lang: 'en',
+        icon: 'src/images/icon.png',
+        start_url: '/',
+        display: 'standalone',
+        background_color: "#fff",
+        theme_color: "#343a40",
+      }
+    },
+    'gatsby-plugin-offline',
+    'gatsby-plugin-react-helmet',
   ],
 }
