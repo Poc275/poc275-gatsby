@@ -1,3 +1,15 @@
+/* hide name in main menu at md breakpoint 
+ and align menu items to the left */
+@media (max-width: 767px) {
+    .menu-name {
+        display: none;
+    }
+
+    .menu-link {
+        margin-left: 0!important;
+    }
+}
+
 .menu-name {
     text-transform: uppercase;
     font-size: 1.5rem;
@@ -6,15 +18,18 @@
 }
 
 .menu-name a {
-    background-image: none;
     color: #2f2f2f!important;
 }
 
 .menu-link {
-    color: #2f2f2f!important;
-    background-image: none;
+    color: #1ca086!important;
+    opacity: 1!important;
     margin-left: 3rem;
     margin-right: 3rem;
-    padding-top: 1.2rem;
-    padding-bottom: 0;
+    padding-top: 1rem;
+}
+
+.menu-link:hover {
+    color: #0056b3!important;
+    text-decoration: underline!important;
 }
