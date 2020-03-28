@@ -13,12 +13,12 @@ export default () => (
             <Row id={styles.intro}>
                 <Col className="align-self-center">
                     <h1 className="text-center mx-auto">
-                        <span role="img" aria-label="another day">🌒 </span>
+                        <span className={styles.missingEmoji} role="img" aria-label="another day">🌒 </span>
                         Another day, another bug
-                        <span role="img" aria-label="another bug"> 🐛</span>
+                        <span className={styles.missingEmoji} role="img" aria-label="another bug"> 🐛</span>
                     </h1>
                     <p className="text-center mx-auto">
-                        The page you are looking for cannot be found. Use the menu to get back on track. 👆
+                        The page you are looking for cannot be found. Use the menu <span role="img" aria-label="direction to menu">👆</span> to get back on track.
                     </p>
                 </Col>
             </Row>
