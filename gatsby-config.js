@@ -9,6 +9,7 @@ module.exports = {
     title: 'Peter O\'Connor\'s Programming Portfolio',
     description: 'My Programming Portfolio',
     author: 'Peter O\'Connor',
+    siteUrl: 'https://poc275.me',
   },
   plugins: [
     'gatsby-plugin-sass',
@@ -63,5 +64,35 @@ module.exports = {
     },
     'gatsby-plugin-offline',
     'gatsby-plugin-react-helmet',
+    {
+      resolve: 'gatsby-plugin-advanced-sitemap',
+      options: {
+        query: `
+          {
+            allMdx {
+              edges {
+                node {
+                  id
+                  fields {
+                    slug
+                  }
+                  frontmatter {
+                    title
+                    date
+                    projectBgImage {
+                      publicURL
+                    }
+                  }
+                }
+              }
+            }
+          }`,
+        additionalSitemaps: [
+          {
+            url: 'https://poc275.me/sitemap-static-pages.xml',
+          }
+        ],
+      }
+    },
   ],
 }

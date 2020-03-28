@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Countdown -->
+    <url>
+        <loc>https://poc275.me/countdown/countdown.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-11-02</lastmod>
+    </url>
+
+    <!-- Mythos -->
+    <url>
+        <loc>https://poc275.me/mythos-viz/index.html</loc>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+        <lastmod>2019-03-03</lastmod>
+    </url>
+
+    <!-- NBack -->
+    <url>
+        <loc>https://poc275.me/NBack/index.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-25</lastmod>
+    </url>
+
+    <!-- Tufte D3 -->
+    <url>
+        <loc>https://poc275.me/tufte-d3js/index.html</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2020-01-05</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/tufte-d3js/us-cancer-rates-map.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2019-12-31</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/tufte-d3js/nyc-weather.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2019-12-31</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/tufte-d3js/paris-lyon-train-timetable.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2020-01-05</lastmod>
+    </url>
+
+    <!-- USA/Canada Trip -->
+    <url>
+        <loc>https://poc275.me/usa-canada/usa-canada-trip.html</loc>
+        <changefreq>yearly</changefreq>
+        <priority>0.6</priority>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/nyc.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/nyc-activities.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/nyc-places.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/nyc-photos.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/washington.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/washington-activities.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/washington-places.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/washington-photos.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/toronto.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/toronto-activities.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/toronto-places.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/toronto-photos.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/boston.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/boston-activities.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/boston-places.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/usa-canada/boston-photos.html</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2018-10-16</lastmod>
+    </url>
+</urlset>
