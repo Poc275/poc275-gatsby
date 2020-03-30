@@ -15,7 +15,6 @@ module.exports = {
     'gatsby-plugin-sass',
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
-    'gatsby-plugin-styled-components',
     {
       resolve: 'gatsby-plugin-mdx',
       options: {
@@ -65,6 +64,12 @@ module.exports = {
     'gatsby-plugin-offline',
     'gatsby-plugin-react-helmet',
     {
+      resolve: 'gatsby-plugin-react-helmet-canonical-urls',
+      options: {
+        siteUrl: 'https://poc275.me',
+      },
+    },
+    {
       resolve: 'gatsby-plugin-advanced-sitemap',
       options: {
         query: `
@@ -79,9 +84,6 @@ module.exports = {
                   frontmatter {
                     title
                     date
-                    projectBgImage {
-                      publicURL
-                    }
                   }
                 }
               }

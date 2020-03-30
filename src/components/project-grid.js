@@ -18,13 +18,6 @@ export default () => (
                             title
                             class
                             static
-                            projectBgImage {
-                                childImageSharp {
-                                  fluid(maxWidth: 600) {
-                                    ...GatsbyImageSharpFluid
-                                  }
-                                }
-                            }
                         }
                     }
                 }
@@ -39,7 +32,6 @@ export default () => (
                                  class={node.frontmatter.class}
                                  link={node.fields.slug}
                                  static={node.frontmatter.static}
-                                 bgImage={node.frontmatter.projectBgImage.childImageSharp.fluid}
                         />
                     ))}
                 </Row>
