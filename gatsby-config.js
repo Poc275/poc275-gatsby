@@ -141,6 +141,7 @@ module.exports = {
         ],
       }
     },
-    'gatsby-plugin-robots-txt'
+    'gatsby-plugin-robots-txt',
+    'gatsby-plugin-htaccess',
   ],
 }
