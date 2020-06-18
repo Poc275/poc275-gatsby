@@ -4,6 +4,7 @@ import Menu from "../components/menu"
 import Welcome from "../components/welcome"
 import ProjectGrid from "../components/project-grid"
 import About from "../components/about"
+import Badges from "../components/badges"
 import Footer from "../components/footer"
 import SEO from '../components/seo'
 
@@ -14,6 +15,7 @@ export default () => (
         <Welcome />
         <ProjectGrid />
         <About />
+        <Badges />
         <Footer />
     </Layout>
 )
