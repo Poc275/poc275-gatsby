@@ -285,3 +285,15 @@ video {
     ),
     url('../images/project-grid/countdown.png');
 }
+
+#e-commerce-project {
+    background-image: url('../images/project-grid/e-commerce-platform.jpg');
+}
+
+#e-commerce-project:hover {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ),
+    url('../images/project-grid/e-commerce-platform.jpg');
+}
