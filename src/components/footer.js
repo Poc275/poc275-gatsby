@@ -37,7 +37,7 @@ export default () => (
                 <p>
                     <small>Powered by </small>
                     <a href="https://www.gatsbyjs.org/" target="_blank" rel="noopener noreferrer">
-                        <img src="https://www.gatsbyjs.org/monogram.svg" alt="Gatsby Logo" className={styles.gatsbyImage} title="Gatsby" />
+                        <img src="https://www.gatsbyjs.com/Gatsby-Monogram.svg" alt="Gatsby Logo" className={styles.gatsbyImage} title="Gatsby" />
                     </a>
                     <small> and </small>
                     <span role="img" aria-label="powered by caffeine" className={styles.emojiSize} title="Tea">☕</span>
