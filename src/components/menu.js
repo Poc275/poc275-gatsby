@@ -17,7 +17,7 @@ export default () => (
                 <Navbar.Text className={styles.menuName}>
                     <Nav.Link href="/">Peter O'Connor</Nav.Link>
                 </Navbar.Text>
-                <Nav.Link href="https://swiftcv.com/@peter.o.connor.283" className={styles.menuLink}>
+                <Nav.Link href="https://swiftcv.com/@poc275" className={styles.menuLink}>
                     <span role="img" aria-label="my CV">📝 </span>my CV
                 </Nav.Link>
                 <Nav.Link href="/#contact" className={styles.menuLink}>
