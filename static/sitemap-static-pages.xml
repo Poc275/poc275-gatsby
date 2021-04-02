@@ -1,5 +1,67 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Peep Show Viz -->
+    <url>
+        <loc>https://poc275.me/peep-show-viz/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/1/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/2/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/3/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/4/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/5/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/6/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/7/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/8/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
+    <url>
+        <loc>https://poc275.me/peep-show-viz/9/explore</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2021-04-02</lastmod>
+    </url>
+
     <!-- Countdown -->
     <url>
         <loc>https://poc275.me/countdown/countdown.html</loc>
@@ -7,10 +69,10 @@
         <lastmod>2018-11-02</lastmod>
     </url>
 
-    <!-- Mythos -->
+    <!-- Mythos Viz -->
     <url>
         <loc>https://poc275.me/mythos-viz/index.html</loc>
-        <changefreq>monthly</changefreq>
+        <changefreq>yearly</changefreq>
         <priority>1.0</priority>
         <lastmod>2019-03-03</lastmod>
     </url>
