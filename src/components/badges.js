@@ -9,7 +9,7 @@ export default () => (
     <Container fluid={true} id="badges" className={styles.badges}>
         <Row className="justify-content-center">
             <Col className={styles.badgeCol}>
-                <h2>🏆</h2>
+                <h2><span role="img" aria-label="achievements">🏆</span></h2>
                 <a href="https://www.youracclaim.com/badges/8c738ab3-2984-4849-86e9-b060ce6dce74/public_url">
                     <img src={AzureBadge} alt="azure fundamentals microsoft certified badge" className={styles.badgeImage} />
                 </a>
