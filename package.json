@@ -50,6 +50,7 @@
     "typography-theme-fairy-gates": "^0.16.19"
   },
   "devDependencies": {
+    "@babel/helper-compilation-targets": "^7.14.5",
     "prettier": "^1.19.1"
   },
   "repository": {
