@@ -309,3 +309,15 @@ video {
     ),
     url('../images/project-grid/peep-show-project.png');
 }
+
+#enigma-emulator-project {
+    background-image: url('../images/project-grid/enigma-emulator.png');
+}
+
+#enigma-emulator-project:hover {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ),
+    url('../images/project-grid/enigma-emulator.png');
+}
