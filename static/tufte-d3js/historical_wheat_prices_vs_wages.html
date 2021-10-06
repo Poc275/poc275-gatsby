@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Historic Price of Wheat & Average Wage</title>
+        <link rel="stylesheet" href="css/tufte.min.css"/>
+        <script src="js/d3.js"></script>
+        <script src="js/d3-annotation.min.js"></script>
+        <style>
+            #chart {
+                position: absolute;
+                left: 10px;
+            }
+
+            svg {
+                mix-blend-mode: darken;
+            }
+
+            div.tooltip {   
+                position: absolute;
+                /* max-width: 200px; */
+                height: auto;
+                padding: 10px;
+                background-color: white;
+                -webkit-border-radius: 5px;
+                -moz-border-radius: 5px;
+                border-radius: 5px;
+                -webkit-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+                -moz-box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+                box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+                pointer-events: none;
+                font-family: sans-serif;
+                font-size:12px;
+            }
+            
+            .monarch-label {
+                font-size: 12px;
+            }
+
+            .xAxis .tick line,
+            .yAxis .tick line {
+                stroke: #fff;
+                /* mix-blend-mode: color-dodge; */
+                mix-blend-mode: soft-light;
+            }
+
+            .yAxis .domain {
+                display: none;
+            }
+
+            .annotation.callout.rect .annotation-subject path {
+                stroke: none;
+                /* stroke-width: .25; */
+                fill: rgb(0, 0, 0);
+                fill-opacity: 0.2;
+                /* mix-blend-mode: overlay; */
+                transition: 0.5s;
+            }
+
+            .annotation.callout.rect .annotation-subject:hover path {
+                fill: rgb(0, 0, 0);
+                fill-opacity: 0.3;
+            }
+
+            .annotation.badge .annotation-subject .subject-pointer, 
+            .annotation.badge .annotation-subject .subject, 
+            .annotation.badge .annotation-subject .subject-ring {
+                fill: rgba(120, 120, 120);
+                fill-opacity: 0.1;
+                stroke: rgb(120, 120, 120);
+                stroke-width: 2px;
+                transition: 0.5s;
+            }
+
+            .annotation.badge .annotation-subject .subject-pointer:hover,
+            .annotation.badge .annotation-subject .subject:hover,
+            .annotation.badge .annotation-subject .subject-ring:hover {
+                /* fill: rgba(200, 200, 200, 1); */
+                fill-opacity: 1;
+            }
+
+            #prices {
+                text-decoration: underline 4px dodgerblue;
+            }
+
+            #wages {
+                text-decoration: underline 4px tomato;
+            }
+
+            .italic {
+                font-style: italic;
+            }
+
+        </style>
+    </head>
+    <body>
+        <article>
+            <section>
+                <h1 id="tufte-css">The price of the quarter of wheat & wages of labour by the week</h1>
+                <p class="subtitle">England/Great Britain/United Kingdom, 1200 &mdash; 1860</p>
+                <p>This is Playfair's chart where he addressed the question whether the price of wheat had increased relative to wages. Three 
+                    parallel time-series are plotted: <span id="prices">prices</span>, <span id="wages">wages</span> and the reigns of kings 
+                    and queens.
+                </p>
+                <p>I've extended the time-period of the original and have added some historic event annotations to see if there is any obvious 
+                    effect to the prices or wages. Specific points-in-time events are below the x-axis represented by markers, whereas longer 
+                    timespan events are represented by the shaded areas on the chart, hover over them to view the details.
+                </p>
+                <p>The wages are based on the weekly wage of a <span class="italic">Craftsman</span>, which is the closest set of data I 
+                    could find to Playfair's original, where he used the weekly wage of a <span class="italic">Good Mechanic</span>.</p>
+
+                <p>I tried to clean up the original by using a <span class="italic">white grid</span>. The grid-lines are still visible 
+                    through the bars, but overall noise is reduced. This is a technique described later in the book to maximise data-ink.
+                </p>
+            </section>
+
+            <section>
+                <h2>Sources</h2>
+                <ul>
+                    <li>Wheat prices courtesy of Clark, G. (2004), "The Price History Of English Agriculture, 1209–1914", Research in Economic 
+                        History (Research in Economic History, Vol. 22), Emerald Group Publishing Limited, Bingley, pp. 41-123. 
+                        <a href="https://doi.org/10.1016/S0363-3268(04)22002-X" target="_blank">https://doi.org/10.1016/S0363-3268(04)22002-X</a></li>
+                    <li>Wages data courtesy of Clark, G. (2005), "The Condition of the Working Class in England, 1209–2004", Journal of Political 
+                        Economy 113(6), The University of Chicago Press Journals. 
+                        <a href="https://doi.org/10.1086/498123" target="_blank">https://doi.org/10.1086/498123</a></li>
+                    <li>D3 annotations courtesy of <a href="https://d3-annotation.susielu.com/" target="_blank">Susie Lu</a></li>
+                    <li>Download the datasets: <a href="data/historical_wheat_prices.csv">wheat prices</a>, 
+                        <a href="data/historical_wheat_prices_vs_wages.csv">wages</a></li>
+                </ul>
+            </section>
+
+            <section>
+                <figure class="fullwidth">
+                    <div id="chart"></div>
+                </figure>
+            </section>
+        </article>
+
+        <script>
+            /**
+             * SVG
+             */
+            const margin = {
+                top: 40,
+                right: 40,
+                bottom: 100,
+                left: 40
+            };
+            const w = 1800 - margin.left - margin.right;
+            const h = 900 - margin.top - margin.bottom;
+
+            const svg = d3.select("#chart")
+                .append("svg")
+                .attr("width", w + margin.left + margin.right)
+                .attr("height", h + margin.top + margin.bottom)
+                .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            /**
+             * SCALES
+             */
+            const xScale = d3.scaleTime()
+                .domain([new Date(1200, 0, 1), new Date(1860, 0, 1)])
+                .range([0, w]);
+
+            const yScale = d3.scaleLinear()
+                .domain([0, 100])
+                .range([h, 0]);
+
+            /**
+             * TOOLTIP
+             */
+            var tooltip = d3.select("body").append("div")   
+                .attr("class", "tooltip")               
+                .attr("id", "tooltip")
+                .style("opacity", 0);
+
+            /**
+             * PARSERS
+             */
+            const parseTime = d3.timeParse("%d/%m/%Y");
+
+            /**
+             * DATA
+             */
+            const wheatData = d3.csv("data/historical_wheat_prices.csv", d => {
+                // convert data types
+                return {
+                    year: d["Year"],
+                    price: +d["Wheat (s./bu.)"]
+                };
+            }).then(data => {
+                // console.log(data);
+                // historic wheat prices are yearly, convert to an average per decade
+                const decadesData = [];
+                let prices = [];
+                data.forEach((d, i) => {
+                    if(d.year % 10 == 0) {
+                        // new decade, commit the previous decade's total
+                        decadesData.push({
+                            year: Number.parseInt(d.year) - 10,
+                            // wheat price is per bushel whereas original chart 
+                            // was per quarter, 1 quarter = 8 bushels
+                            price: prices.reduce((prev, curr) => prev + curr) / prices.length * 8
+                        });
+                        // reset total
+                        prices = [];
+                        prices.push(d.price);
+                    } else {
+                        prices.push(d.price);
+                    }
+                });
+
+                // console.log(decadesData);
+                return decadesData;
+            }).catch(err => console.log(err));
+
+            const wagesData = d3.csv("data/historical_wheat_prices_vs_wages.csv").catch(err => console.log(err));
+            const monarchsData = d3.csv("data/monarchs.csv").catch(err => console.log(err));
+            
+            // wait on all data to be retrieved
+            Promise.all([wheatData, wagesData, monarchsData]).then((data) => {
+                // console.log(data);
+                addAnnotations();
+                drawBreadPriceBars(data[0], data[1]);
+                drawAxes();
+                drawWagesLine(data[1]);
+                drawMonarchsBars(data[2]);
+                addMonarchLabels(data[2]);
+            });
+
+            /**
+             * Price of Bread bars
+             */
+            const drawBreadPriceBars = (dataset, wagesData) => {
+                svg.selectAll(".wheat-rect")
+                    .data(dataset)
+                    .enter()
+                    .append("rect")
+                        .attr("x", (d, i) => {
+                            return xScale(new Date(d.year, 0, 1));
+                        })
+                        .attr("y", (d) => {
+                            return yScale(d.price);
+                        })
+                        .attr("width", (d, i) => {
+                            const start = new Date(d.year, 0, 1);
+                            // prices are per decade, so add 10 years to end date
+                            const end = new Date(Number.parseInt(d.year) + 10, 0, 1);
+                            return xScale(end) - xScale(start);
+                        })
+                        .attr("height", (d) => {
+                            return h - yScale(d.price);
+                        })
+                        .attr("class", "wheat-rect")
+                        .attr("fill", "dodgerblue")
+                        // tooltip events
+                        .on("mouseover", function(d, i) {
+                            // hover colour
+                            d3.select(this)
+                                .transition()
+                                    .duration(200)
+                                    .style("fill", "#6bb6ff");
+
+                            tooltip.transition()
+                                .duration(500)      
+                                .style("opacity", .9);
+
+                            const tip = `<strong>${d.year} &mdash; ${d.year + 10}</strong><br />` + 
+                                `Wheat Price: ${d.price.toFixed(2)} s<br />` + 
+                                `Wages: ${wagesData[i]["Craftsmen Wages (d./day)"]} d./day`;
+
+                            tooltip.html(tip)  
+                                .style("left", (d3.event.pageX + 28) + "px")
+                                .style("top", (d3.event.pageY - 28) + "px");
+                        })
+                        .on("mouseout", function(d) {
+                            // reset hover colour
+                            d3.select(this)
+                                .transition()
+                                    .duration(200)
+                                    .style("fill", "dodgerblue");
+
+                            tooltip.transition()
+                                .duration(500)
+                                .style("opacity", 0);
+                        });
+            }
+
+            /**
+             * Monarchs bars
+             */
+            const drawMonarchsBars = (dataset) => {
+                const noMonarchy = ["Interregnum", "Oliver Cromwell", "Richard Cromwell"];
+                svg.selectAll("#monarch-rect")
+                    .data(dataset)
+                    .enter()
+                    .append("rect")
+                        .attr("id", "monarch-rect")
+                        .attr("x", (d, i) => {
+                            // clamp first reign to 1200 to prevent axis overflow
+                            return i === 0 ? xScale(new Date(1200, 0, 1)) : xScale(parseTime(d["start"]));
+                        })
+                        .attr("y", (d, i) => {
+                            // alternate y positions every time monarch changes
+                            return i % 2 == 0 ? 0 : 10;
+                        })
+                        .attr("width", (d, i) => {
+                            // clamp final reign (Victoria) to 1860 to prevent axis overflow
+                            return d["monarch"] === "Victoria" ? 
+                                xScale(new Date(1860, 0, 1)) - xScale(parseTime(d["start"])) : 
+                                xScale(parseTime(d["end"])) - xScale(parseTime(d["start"]));
+                        })
+                        .attr("height", 10)
+                        .attr("fill", (d, i) => {
+                            // highlight Cromwell as period when monarchy was abolished
+                            // return d["monarch"] == "Oliver Cromwell" ? "white" : "black";
+                            return noMonarchy.includes(d["monarch"]) ? "white" : "black";
+                            // return "#000";
+                        })
+                        .attr("stroke", "black")
+                        .attr("stroke-width", (d, i) => {
+                            // return d["monarch"] == "Oliver Cromwell" ? 1 : 0;
+                            return noMonarchy.includes(d["monarch"]) ? .5 : 0;
+                        })
+                        // tooltip events
+                        .on("mouseover", function(d) {
+                            // hover colour
+                            d3.select(this)
+                                .transition()
+                                    .duration(200)
+                                    .style("fill", "#999");
+
+                            tooltip.transition()
+                                .duration(500)      
+                                .style("opacity", .9);
+
+                            const tip = `<strong>${d["monarch"]}</strong><br />` + 
+                                `${d["name"] === "" ? "" : d["name"]}` + `${d["name"] === "" ? "" : "<br />"}` +  
+                                `${d["house"] === "" ? "" : "House of " + d["house"]}` + `${d["house"] === "" ? "" : "<br />"}` +
+                                `${d["start"]} to ${d["end"]}`;
+
+                            tooltip.html(tip)  
+                                .style("left", (d3.event.pageX + 40) + "px")
+                                .style("top", (d3.event.pageY + 20) + "px");
+
+                            // highlight wheat prices during their reign
+                            const reignStart = parseTime(d["start"]).getFullYear();
+                            const reignEnd = parseTime(d["end"]).getFullYear();
+                            d3.selectAll(".wheat-rect")
+                                .transition()
+                                    .duration(200)
+                                    .style("fill", (d, i) => {
+                                        if((reignStart <= d.year && d.year <= reignEnd) || 
+                                            (d.year <= reignStart && d.year + 10 >= reignStart)) {
+                                                return "#6bb6ff";
+                                        }
+                                        return "dodgerblue";
+                                    });
+                        })
+                        .on("mouseout", function(d) {
+                            // reset hover colour
+                            d3.select(this)
+                                .transition()
+                                    .duration(200)
+                                    .style("fill", (d, i) => {
+                                        return noMonarchy.includes(d["monarch"]) ? "white" : "black";
+                                    });
+
+                            tooltip
+                                .transition()
+                                    .duration(500)
+                                    .style("opacity", 0);
+
+                            // reset wheat price bars
+                            d3.selectAll(".wheat-rect")
+                                .transition()
+                                    .duration(500)
+                                    .style("fill", "dodgerblue");
+                        });
+            }
+
+            /**
+             * Wages line
+             */
+            const drawWagesLine = (dataset) => {
+                const line = d3.line()
+                    .defined(d => !isNaN(d["Craftsmen Wages (d./day)"]))
+                    .x(d => xScale(new Date(d["Decade"], 0, 1)))
+                    // * 7 to get weekly wage (assuming a 7 day working week?) and / 12 
+                    // to convert from pennies (d) to shillings (s)
+                    .y(d => yScale(d["Craftsmen Wages (d./day)"] * 7 / 12));
+
+                svg.append("path")
+                    .datum(dataset)
+                    .attr("fill", "none")
+                    .attr("stroke", "tomato")
+                    .attr("stroke-width", 3)
+                    .attr("d", line);
+
+                // fill in gap @ decade 1230
+                svg.append("path")
+                    .datum(dataset.filter(line.defined()))
+                    .attr("fill", "none")
+                    .attr("stroke", "tomato")
+                    .attr("stroke-width", 3)
+                    .attr("d", line);
+            }
+
+            /**
+             * AXES
+             */
+            const drawAxes = () => {
+                // time-series x-axis
+                svg.append("g")
+                    .attr("transform", `translate(0, ${h})`)
+                    .attr("class", "xAxis")
+                    .call(d3.axisBottom(xScale)
+                        .tickSize(-h)
+                        .ticks(d3.timeYear.every(10))
+                        .tickFormat((d, i) => {
+                            const year = new Date(d).getFullYear();
+                            // show full year every 50 years, otherwise just the decade
+                            return i % 5 === 0 ? year : String(year).slice(2, 4);
+                        }))
+                    .selectAll("text")
+                        .style("font-weight", (d, i) => {
+                            return i % 5 === 0 ? "bold" : "normal";
+                        });
+
+                // wages y-axis
+                svg.append("g")
+                    .attr("transform", `translate(0, 0)`)
+                    .attr("class", "yAxis")
+                    .call(d3.axisLeft(yScale)
+                        // ignore zero
+                        .tickFormat(d => d === 0 ? "" : d)
+                        .tickSize(-w));
+
+                svg.append("g")
+                    .attr("transform", `translate(${w}, 0)`)
+                    .call(d3.axisRight(yScale)
+                        // ignore zero
+                        .tickFormat(d => d === 0 ? "" : d));
+
+                // axis labels
+                svg.append("text")
+                    .attr("transform", `translate(${w / 2}, ${h + margin.top + 20})`)
+                    .style("text-anchor", "middle")
+                    .text("Year");
+
+                svg.append("text")
+                    .attr("transform", `translate(${w + margin.right}, ${h / 2}) rotate(-90)`)
+                    .style("text-anchor", "middle")
+                    .text("Price of the Quarter of Wheat in Shillings");
+            }
+
+            /**
+             * LABELS
+             */
+            const addMonarchLabels = (dataset) => {
+                // monarch labels
+                svg.selectAll(".monarch-label")
+                    .data(dataset)
+                    .enter()
+                    .append("text")
+                        .attr("class", "monarch-label")
+                        .attr("text-anchor", "middle")
+                        .attr("x", (d, i) => {
+                            // centre label position
+                            // Victoria's reign has been clamped to 1860 so adjust accordingly
+                            return d["monarch"] === "Victoria" ? 
+                                xScale(parseTime(d["start"])) + ((xScale(new Date(1860, 0, 1)) - xScale(parseTime(d["start"]))) / 2) :
+                                xScale(parseTime(d["start"])) + ((xScale(parseTime(d["end"])) - xScale(parseTime(d["start"]))) / 2);
+                        })
+                        .attr("y", (d, i) => {
+                            return 0;
+                        })
+                        .attr("dy", -5)
+                        .text((d) => {
+                            // only label if we have enough space
+                            // (if on throne long enough i.e. the bar is long enough for a label)
+                            if(parseTime(d["end"]).getFullYear() - parseTime(d["start"]).getFullYear() > 15) {
+                                return d["monarch"];
+                            } else {
+                                return null;
+                            }
+                        });
+            }
+
+            /**
+             * ANNOTATIONS
+             */
+            const addAnnotations = () => {
+                // annotations at a specific point in time
+                const singleEvents = [
+                    { title: "", label: "Magna Carta is signed", date: new Date(1215, 5, 15) },
+                    { title: "", label: "Battle of Bannockburn", date: new Date(1314, 5, 23) },
+                    { title: "", label: "Peasant's Revolt", date: new Date(1381, 4, 30) },
+                    { title: "", label: "First Act of Supremacy", date: new Date(1534, 10, 3) },
+                    { title: "", label: "Cranmer's Book of Common Prayer published", date: new Date(1549, 0, 1) },
+                    { title: "", label: "Spanish Armada sets sail", date: new Date(1588, 6, 1) },
+                    { title: "", label: "East India Company formed", date: new Date(1600, 11, 31) },
+                    // { title: "", label: "First enclosure by Act of Parliament", date: new Date(1604, 0, 1) },
+                    { title: "", label: "Gunpowder Plot", date: new Date(1605, 10, 5) },
+                    { title: "", label: "Mayflower arrives", date: new Date(1620, 10, 21) },
+                    { title: "", label: "Charles I Executed", date: new Date(1649, 0, 30) },
+                    { title: "", label: "Restoration of the monarchy", date: new Date(1660, 0, 1) },
+                    { title: "", label: "Glorious Revolution", date: new Date(1688, 10, 1) },
+                    { title: "", label: "Bank of England established", date: new Date(1694, 6, 27) },
+                    { title: "", label: "Acts of Union", date: new Date(1707, 4, 1) },
+                    { title: "", label: "First steam engine invented", date: new Date(1712, 0, 1) },
+                    { title: "", label: "South Sea Bubble", date: new Date(1720, 0, 1) },
+                    { title: "", label: "Battle of Culloden", date: new Date(1746, 3, 16) },
+                    { title: "", label: "US Declaration of Independence", date: new Date(1776, 6, 4) },
+                    { title: "", label: "The Iron Bridge opens", date: new Date(1781, 0, 1) },
+                    { title: "", label: "Act of Union", date: new Date(1801, 0, 1) },
+                    { title: "", label: "Battle of Trafalgar", date: new Date(1805, 9, 21) },
+                    { title: "", label: "Battle of Waterloo", date: new Date(1815, 5, 18) },
+                    { title: "", label: "First public steam railway", date: new Date(1825, 8, 27) },
+                    { title: "", label: "Corn Laws repealed", date: new Date(1846, 0, 27) },
+                ];
+
+                const singleEventAnnotations = singleEvents.map(e => {
+                    return {
+                        note: {
+                            title: e.title === "" ? null : e.title,
+                            label: e.label,
+                            date: e.date,
+                            // bgPadding: 0
+                        },
+                        x: xScale(e.date),
+                        y: yScale(0) + 15,
+                        // dy: 40,
+                        // dx: 50,
+                        color: "#bbb",
+                        // className: "show-bg",
+                        subject: {
+                            text: "",
+                            radius: 6,
+                            y: "bottom"
+                        }
+                    };
+                });
+
+                // badge annotations
+                const makeAnnotations = d3.annotation()
+                    .editMode(false)
+                    .notePadding(8)
+                    .textWrap(100)
+                    .type(d3.annotationBadge)
+                    .annotations(singleEventAnnotations)
+                    .on("subjectover", annotation => {
+                        tooltip.transition()
+                            .duration(500)      
+                            .style("opacity", .9);
+
+                        const tip = `${annotation.note.label} <br />` + 
+                            `${annotation.note.date.toLocaleDateString()}`;
+
+                        tooltip.html(tip)  
+                            .style("left", (d3.event.pageX + 20) + "px")
+                            .style("top", (d3.event.pageY + 10) + "px");
+                    })
+                    .on("subjectout", () => {
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+
+                svg.append("g")
+                    .attr("class", "annotation-group")
+                    .call(makeAnnotations);
+
+                // annotations that span a period of time
+                const timespanEvents = [
+                    { title: "", label: "Conquest of Wales", start: new Date(1276, 0, 1), end: new Date(1301, 0, 1) },
+                    { title: "", label: "Hundred Years War", start: new Date(1337, 0, 1), end: new Date(1453, 0, 1) },
+                    { title: "", label: "Black Death", start: new Date(1348, 0, 1), end: new Date(1350, 0, 1) },
+                    { title: "", label: "Wars of the Roses", start: new Date(1455, 4, 22), end: new Date(1487, 5, 16) },
+                    { title: "", label: "Dissolution of the monasteries", start: new Date(1536, 0, 1), end: new Date(1541, 0, 1) },
+                    { title: "", label: "Circumnavigation of the globe", start: new Date(1577, 0, 1), end: new Date(1580, 0, 1) },
+                    { title: "", label: "English Civil Wars", start: new Date(1642, 7, 1), end: new Date(1651, 8, 3) },
+                    { title: "", label: "Great Plague and Fire of London", start: new Date(1665, 0, 1), end: new Date(1666, 11, 31) },
+                    { title: "", label: "Seven Years' War", start: new Date(1756, 4, 17), end: new Date(1763, 1, 15) },
+                    { title: "", label: "Napoleonic Wars", start: new Date(1803, 4, 18), end: new Date(1815, 10, 20) },
+                    { title: "", label: "Crimean War", start: new Date(1853, 9, 16), end: new Date(1856, 2, 30) },
+                ];
+                
+                // for more options see: https://bl.ocks.org/susielu/be6d1e920d529ed340cfb4c2879e7cd9
+                const timespanAnnotations = timespanEvents.map(e => {
+                    return {
+                        note: {
+                            title: e.title === "" ? null : e.title,
+                            label: e.label,
+                            lineType: "none",
+                            align: "middle",
+                            start: e.start,
+                            end: e.end,
+                            // wrap: 150,
+                            // bgPadding: 0
+                        },
+                        x: xScale(e.start),
+                        y: yScale(100),
+                        dy: 20,
+                        dx: 0,
+                        color: "#777",
+                        disable: ["connector", "note"],
+                        // className: "show-bg",
+                        subject: {
+                            width: xScale(e.end) - xScale(e.start),
+                            height: yScale(0)
+                        }
+                    };
+                });
+
+                const makeTimespanAnnotations = d3.annotation()
+                    .editMode(false)
+                    .notePadding(8)
+                    .textWrap(120)
+                    .type(d3.annotationCalloutRect)
+                    .annotations(timespanAnnotations)
+                    .on("subjectover", annotation => {
+                        // console.log(annotation);
+                        tooltip.transition()
+                            .duration(500)      
+                            .style("opacity", .9);
+
+                        const tip = `${annotation.note.label} <br />` + 
+                            `${annotation.note.start.getFullYear()} &mdash; ${annotation.note.end.getFullYear()}`;
+
+                        tooltip.html(tip)  
+                            .style("left", (d3.event.pageX + 20) + "px")
+                            .style("top", (d3.event.pageY + 10) + "px");
+                    })
+                    .on("subjectout", () => {
+                        tooltip.transition()
+                            .duration(500)
+                            .style("opacity", 0);
+                    });
+
+                svg.append("g")
+                    .attr("class", "annotation-group")
+                    .call(makeTimespanAnnotations);
+            }
+
+        </script>
+    </body>
+</html>
