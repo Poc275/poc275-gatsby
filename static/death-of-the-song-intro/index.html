@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Is The Song Intro Dead?</title>
+
+    <link href="css/reset.css" rel="stylesheet" />
+    <link href="css/index.css" rel="stylesheet" />
+
+    <script src="https://use.fontawesome.com/37d41d83a4.js"></script>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/d3-delaunay@6"></script>
+    <script src="js/d3-regression.js"></script>
+    <script src="js/d3-annotation.min.js"></script>
+    <script src="https://sdk.scdn.co/spotify-player.js"></script>
+</head>
+<body>
+    <div id="header" class="centred">
+        <h1>Is The Song Intro Dead?</h1>
+        <p class="subheading">Has streaming killed the great song intro?</p>
+        <p>Requires audio, a large screen and a Spotify premium account for the best experience.</p>
+        <button id="spotify-login-btn" class="spotify-btn"><span class="btn-text">Login with Spotify</span>
+            <img class="spotify-btn-logo" src="img/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png" alt="spotify logo" />
+        </button>
+
+        <p class="small" id="login-toast">Note this is just so you can play the tracks and save as a playlist if so desired, no personal data is stored.</p>
+    </div>
+
+    <div class="centred">
+        <p>It’s 1989, the decade of excess is drawing to a denouement and the Stone Roses have just released I Wanna Be Adored, the opening track on their eponymous 
+            classic debut record. Whether due to the onset of digital recording, the MTV effect, or just because everything was done to the extreme in the ‘80s, the 
+            decade was a high watermark for the song intro, where a tune builds up slowly toward an opening crescendo before the vocal kicks in.</p>
+
+        <p>It has been claimed that thanks to streaming, 
+            <a href="https://www.bbc.co.uk/news/entertainment-arts-41500692" target="_blank" rel="noopener noreferrer">the age of the great song intro is 
+            over</a> <i class="fa fa-external-link" aria-hidden="true"></i>. Fickle music fans can now skip tracks if their attention isn’t grabbed 
+            almost immediately, and with the voice being the most attention-grabbing instrument there is in music, it needs to come in much more quickly than in years 
+            gone by otherwise the listener skips, and if this happens before 30 seconds has elapsed, 
+            <a href="https://artists.spotify.com/en/help/article/how-we-count-streams" target="_blank" rel="noopener noreferrer">
+            the stream doesn’t count</a> <i class="fa fa-external-link" aria-hidden="true"></i> hitting artists in their pockets.</p>
+
+        <p>That’s the theory, but I wanted to see if this holds true in the data. Below are the 30 top selling songs per year based on number of weeks spent in the 
+            UK Top 10 chart arranged by date of release and the time before the vocal kicks in (beware of the scale, it isn’t linear as most songs tend to bunch 
+            around the 10 second mark and this helps prevent too much overlap).</p>
+
+        <p>Click ‘Start’ on the chart to put this into context by comparing them to the intro in ‘I Wanna Be Adored’. This requires you to login with a Spotify 
+            premium account but you can still interact with the data without this.</p>
+    </div>
+   
+    <div id="plot-tools">
+        <button id="togglePlay">Start</button>
+        
+        <br />
+
+        <label for="toggle-annotations-btn">Annotations</label>
+        <input type="checkbox" id="toggle-annotations-btn">
+
+        <br />
+
+        <label for="toggle-trend-btn">Trend</label>
+        <input type="checkbox" id="toggle-trend-btn">
+
+        <br />
+
+        <label for="toggle-instrumentals-btn">Instrumentals</label>
+        <input type="checkbox" id="toggle-instrumentals-btn">
+
+        <br />
+
+        <select id="artist-selection">
+            <option value="">-- Popular artists --</option>
+        </select>
+
+        <br />
+
+        <p id="intro-percent">0%</p>
+    </div>
+
+    <div id="intros-plot">
+        <!-- <p id="analysis">1:13 – Then Reni joins the mix with the bass drum at the 1:13 mark. It feels like the vocal is imminent but genius demands patience and we continue to be swept along in the glorious fug of noise. At this point 97% of all intros have completed, only instrumentals, The Final Countdown by Europe and some 90’s dance bangers (Utah Saints – Something Good, The Prodigy – No Good) still remain.</p> -->
+        <p id="analysis"></p>
+    </div>
+
+    <div class="centred">
+        <p>As we can see from the <span id="trend">trend</span>, the intro is definitely becoming shorter, but it’s more gradual than precipitous. Perhaps 
+            we’ve always craved a quick vocal hit and streaming is just giving us more of what we want. 50% of <em>all</em> intros are over within the first 6 seconds, so, 
+            maybe we should hold off writing the intro’s elegy after all. I Wanna Be Adored peaked at #20 in the charts so isn’t on this list. Interestingly, some of 
+            the most famous intros don’t make the cut either:</p>
+        
+        <p><span class="clip" id="temptations"><span class="clip-control" id="play-temptations"><i class="fa fa-play" aria-hidden="true"></i></span> <em>Papa Was A Rollin’ Stone</em> - The Temptations</span>: 
+            Pure unadulterated funk and groove for nearly 2 minutes before the vocals. Peaked at #14, and didn't make the list.</p>
+
+        <p><span class="clip" id="stones"><span class="clip-control" id="play-stones"><i class="fa fa-play" aria-hidden="true"></i></span> <em>Gimme Shelter</em> - The Rolling Stones</span>: A 50 second intro 
+            of tense, menacing, distorted riffs from Richards before Jagger’s vocal captures the violent mood of the era. Peaked at #19 and not in this list.</p>
+
+        <p><span class="clip" id="who"><span class="clip-control" id="play-who"><i class="fa fa-play" aria-hidden="true"></i></span> <em>Baba O’Riley</em> - The Who</span>: Over a minute’s worth of pulsating, 
+            trance-inducing sounds before we hear the first vocal in one of the all-time classic intros. This wasn’t even released as single!</p>
+
+        <p><span class="clip" id="new-order"><span class="clip-control" id="play-new-order"><i class="fa fa-play" aria-hidden="true"></i></span> <em>Blue Monday</em> - New Order</span>: The iconic drum 
+            machine intro and throbbing bass line builds up to Bernard Sumner’s deadpan vocal, which can take quite some time depending on the version. Although 
+            it was the best selling 12” of all time, it only spent 2 weeks in the Top 10, peaking at #9 and doesn’t quite make the cut.</p>
+
+        <p>The songs that do make the cut seem to be on the shorter side in comparison:</p>
+
+        <p><span class="clip" id="beatles"><span class="clip-control" id="play-beatles"><i class="fa fa-play" aria-hidden="true"></i></span> <em>A Hard Day’s Night</em> - The Beatles</span>: As with most 
+            things, The Beatles prove to be the exception. As intros go it is incredibly short, we hear John Lennon’s vocal just after the 3 second mark, but it’s 
+            the opening chord that makes this famous. Can a single chord even be classed as an intro? When it’s The Beatles it most certainly can. George Harrison’s 
+            mighty opening chord is probably the most discussed intro of all time.</p>
+        
+        <p><span class="clip" id="jacko"><span class="clip-control" id="play-jacko"><i class="fa fa-play" aria-hidden="true"></i></span> <em>Billie Jean</em> - Michael Jackson</span>: Minimal instrumentation 
+            builds up slowly in this classic pop intro. We get the opening drum beat with a standard hi-hat, joined by a shaker, bassline and synth towards the 
+            quiet vocal start at the 30 second point.</p>
+
+        <p><span class="clip" id="summer"><span class="clip-control" id="play-summer"><i class="fa fa-play" aria-hidden="true"></i></span> <em>I Feel Love</em> - Donna Summer</span>: The hypnotic Giorgio 
+            Moroder bassline and sweeping synth still sounds cutting edge over 40 years later. In the single version the vocal enters just after 30 seconds.</p>
+
+        <p>Technology having an effect on the music industry isn’t exactly new and noteworthy, but we can see a definite <em>gradual</em> decline in the length of time before 
+            the vocals start, and streaming, with its concomitant demands on listener attention, must be a factor. However, it wasn’t as if the super-long, drawn-out 
+            intro à la “I Wanna Be Adored” was hugely popular in the past, perhaps this type of intro has always been within the purview of 
+            <abbr title="Album-oriented rock">AOR</abbr> and <abbr title="like myself :)">closet music snobs</abbr> making claims to music’s decline. There are still plenty of recent anomalies (Billie 
+            Eilish, The Weeknd, any new James Bond theme song) and there have been peaks and troughs in the past perhaps suggesting that this might not be a permanent 
+            decline and streaming, like anything in the economy, is just providing more of what people want.</p>
+
+        <h2>Do I Have Your Attention?</h2>
+
+        <p>I've had this nagging feeling for some time that streaming has fundamentally altered the way I consume music. Just recently the annual Spotify “wrapped” report 
+            hit my inbox and it dawned on me that there were no albums, just a loose collection of individual tracks. As a music lover, nay, adorer, I couldn't believe 
+            that I'd been sucked into this mode of consumption. Back in the fat days I couldn't wait to go out and buy the latest album, usually on the orders of the 
+            NME. Some of my favourite records didn't strike a chord at first listen, it was only after repeated hours that they finally hit, and it was so much more 
+            rewarding. So how had I let this situation come to pass? It's down to something dubbed <em>attention economy</em>. The decline of the intro, which we have already 
+            looked at, formed part of a wider study into the <a href="https://journals.sagepub.com/doi/full/10.1177/1029864917698010" target="_blank" rel="noopener noreferrer">
+            theory of attention economy on listener attention by Hubert Léveillé Gauvin at Ohio State University</a> <i class="fa fa-external-link" aria-hidden="true"></i>.</p>
+
+        <p>The study showed that the situation is driven by streaming services where due to the sheer volume of music available at your fingertips, coupled with the 
+            ability to instantly skip songs, artists are now facing much higher levels of competition for listeners’ attention, and attention is the scarcest of 
+            scarce commodities. In the vinyl days the barrier was higher as it took more effort to go over and switch records. This became easier in the cassette/CD 
+            era but you still had to physically switch, plus with physical mediums you had to make a choice as a consumer to part with your hard-earned for a particular 
+            record, now the entire catalogue is at your mercy and if you get bored, you just skip. The barrier hasn't just lowered, it has been obliterated.</p>
+
+        <p>This is common knowledge across the internet and is analogous to the back button in a web browser impacting attention spans on websites, but when it 
+            comes to music the study showed that it is in-fact a 2-stage screening process. The first being after 5 seconds as a “first-pass” 
+            (<a href="https://musicmachinery.com/2014/05/02/the-skip/" target="_blank" rel="noopener noreferrer">24% of all Spotify plays were skipped within the first 5 
+            seconds</a> <i class="fa fa-external-link" aria-hidden="true"></i>), and the second stage after 20 seconds as most skips happen within this 
+            period, after this there is a relatively small but steady skipping rate. Only 52% of songs were listened to in their entirety. With revenue relying on stream 
+            counts, and streams not counting until someone listens for a minimum of 30 seconds, it is vital that the fickle listener’s attention is grabbed almost 
+            immediately. The impact of the internet on the music industry is huge, so I wasn't sure why this was such a surprise, I suppose I was like the proverbial addict, 
+            tricking myself into believing I had it under control but in reality, the medium is the message and I was at the mercy of the medium all along.</p>
+
+        <p>As well as the decline of the intro, this and a similar study <a href="https://www.nature.com/articles/srep00521" target="_blank" rel="noopener noreferrer">looking 
+            at the evolution of music</a> <i class="fa fa-external-link" aria-hidden="true"></i> identified other possible ways of measuring the attention economy in music. 
+            Select from these below to see the yearly averages to view the impact:
+            <select id="attention-category-select">
+                <option value="title_words">Number of words in the title</option>
+                <option value="tempo">Tempo</option>
+                <option value="vocals_start">Time before the voice enters</option>
+                <option value="energy">Timbre</option>
+                <option value="loudness">Loudness</option>
+                <option value="acousticness">Acousticness</option>
+                <option value="danceability">Danceability</option>
+                <option value="speechiness">Speechiness</option>
+                <option value="valence">Valence</option>
+                <option value="duration">Duration</option>
+                <option value="weeks_in_top_10">Weeks in Top 10</option>
+            </select>
+        </p>
+    </div>
+
+    <div class="flex">
+        <div id="attention-economy-plot"></div>
+        <div>
+            <p id="attention-economy-title">Average number of words in the song title</p>
+            <p id="attention-economy-explanation">There has been a recent tendency for popular songs to have short titles with Billboard Magazine giving them 
+                the moniker of “One-Word Wonders”. Today, it is two and a half times more likely that a hit has a one-word title than back in the 60s. We see a 
+                steep decline in the average number of words from the turn of the millennium, possible coinciding with the rising importance of single sales 
+                over albums. Why? The theory is that memory span is inversely related to word length, consequently shorter titles should be more memorable 
+                and better commercially as a result.</p>
+        </div>
+    </div>
+
+    <div id="footer" class="centred">
+        <hr />
+        <p>Made by <a href="https://poc275.me/">Peter O'Connor</a>.</p> 
+        <p>Top 10 info scraped from 
+            <a href="https://en.wikipedia.org/wiki/Lists_of_UK_top-ten_singles">Wikipedia's list of UK top-ten singles</a>. Track info, playback and artwork all courtesy 
+            of the <a href="https://developer.spotify.com/documentation/web-api/">Spotify API</a>.</p>
+
+        <p><a href="data/11_final_top2000_with_artwork.csv">Download the dataset</a> (CSV).</p>
+        
+        <p>Made using <a href="https://d3js.org/">d3.js</a>, 
+            <a href="https://d3-annotation.susielu.com/">d3 annotations by Susie Lu</a>, <a href="https://github.com/HarryStevens/d3-regression">d3 regression 
+                by Harry Stevens</a> and <a href="https://fontawesome.com/">Font Awesome</a>. Many thanks to you all.</p>
+        
+        <button id="spotify-save-playlist-btn" class="spotify-btn"><span class="btn-text">Save as a Spotify playlist</span>
+            <img class="spotify-btn-logo" src="img/spotify-icons-logos/icons/01_RGB/02_PNG/Spotify_Icon_RGB_White.png" alt="spotify logo" />
+        </button>
+        <p class="small" id="save-playlist-toast"></p>
+    </div>
+
+    <!-- info slider -->
+    <div id="info-slider">
+        <span id="info-slider-close-btn" onclick="closeInfoSliderPanel()">
+            <i class="fa fa-times" aria-hidden="true"></i>
+        </span>
+        <h2 id="info-slider-track"></h2>
+        <p class="subheading">&mdash; <span id="info-slider-artist"></span> &mdash;</p>
+        <ul id="info-slider-meta">
+            <li><button id="info-slider-play-btn"><i class="fa fa-play" aria-hidden="true"></i> Play</button></li>
+            <li><i class="fa fa-calendar-o" aria-hidden="true"></i> <span id="info-slider-date"></span></li>
+            <li><i class="fa fa-line-chart" aria-hidden="true"></i> #<span id="info-slider-peak"></span></li>
+            <li><i class="fa fa-clock-o" aria-hidden="true"></i> <span id="info-slider-duration-mins"></span>m <span id="info-slider-duration-secs"></span>s</li>
+        </ul>
+        <!-- <button id="info-slider-play-btn"><i class="fa fa-play" aria-hidden="true"></i> Play</button> -->
+        <small id="no-preview">No preview available, login to play the full track.</small>
+        
+        <div class="nightingale"></div>
+
+        <div class="nightingale-key">
+            <div class='nightingale-key-song'></div> Song
+            <span>&nbsp;</span>
+            <div class='nightingale-key-all-time-avg'></div> All Time Average
+            <p id="nightingale-explainer-text"></p>
+        </div>
+    </div>
+
+    <!-- scripts -->
+    <script src="js/song-data.js"></script>
+    <script src="js/spotify-auth.js"></script>
+    <script src="js/attention-economy-plot.js"></script>
+    <script src="js/intros-plot.js"></script>
+    <script src="js/nightingale.js"></script>
+    <script src="js/player.js"></script>
+    <script>
+        // close info slider panel click event handler
+        const closeInfoSliderPanel = () => {
+            // close panel
+            document.getElementById('info-slider').style.width = 0;
+
+            // clear highlights
+            d3.select('.song-clicked')
+                .transition().duration(300)
+                .style('opacity', 0);
+        };
+
+        // toggle annotations event handler
+        let showAnnotations = false;
+        document.getElementById('toggle-annotations-btn').addEventListener('click', event => {
+            showAnnotations = !showAnnotations;
+            showAnnotations ? document.getElementsByClassName('annotation-group')[0].style.opacity = 1 : 
+                document.getElementsByClassName('annotation-group')[0].style.opacity = 0;
+        });
+
+        // toggle trend line event handler
+        let showTrend = false;
+        document.getElementById("toggle-trend-btn").addEventListener('click', event => {
+            showTrend = !showTrend;
+            showTrend ? document.getElementById("regression-line").style.opacity = 1 : 
+                document.getElementById("regression-line").style.opacity = 0;
+        });
+    </script>
+    <script>
+        // sound clips handlers
+        const temptationsAudio = new Audio("https://p.scdn.co/mp3-preview/24e5a00cb978fbf99deacf06ce8fe83d89c16b99?cid=774b29d4f13844c495f206cafdad9c86");
+        const stonesAudio = new Audio("https://p.scdn.co/mp3-preview/c86cdbfb43eda60f61f227967a29da1aab31cda9?cid=774b29d4f13844c495f206cafdad9c86");
+        const whoAudio = new Audio("https://p.scdn.co/mp3-preview/7f40e10c50af06f1e1b55dc2d565a05a98b6c6a1?cid=774b29d4f13844c495f206cafdad9c86");
+        const newOrderAudio = new Audio("https://p.scdn.co/mp3-preview/8dd7e26e950403f177a8a828efa7490e8cad7508?cid=774b29d4f13844c495f206cafdad9c86");
+        const beatlesAudio = new Audio("https://p.scdn.co/mp3-preview/bde00f9865951e2dd1948aff24fececc5883f111?cid=774b29d4f13844c495f206cafdad9c86");
+        const jackoAudio = new Audio("https://p.scdn.co/mp3-preview/f504e6b8e037771318656394f532dede4f9bcaea?cid=774b29d4f13844c495f206cafdad9c86");
+        const summerAudio = new Audio("https://p.scdn.co/mp3-preview/e16948077ecd347c101fb012fee9ccd4307aaa03?cid=774b29d4f13844c495f206cafdad9c86");
+
+        document.getElementById("play-temptations").addEventListener('click', event => {
+            toggleAudioClip(temptationsAudio, "play-temptations", "#temptations", temptationsAudio.paused);
+        });
+
+        document.getElementById("play-stones").addEventListener('click', event => {
+            toggleAudioClip(stonesAudio, "play-stones", "#stones", stonesAudio.paused);
+        });
+
+        document.getElementById("play-who").addEventListener('click', event => {
+            toggleAudioClip(whoAudio, "play-who", "#who", whoAudio.paused);
+        });
+
+        document.getElementById("play-new-order").addEventListener('click', event => {
+            toggleAudioClip(newOrderAudio, "play-new-order", "#new-order", newOrderAudio.paused);
+        });
+
+        document.getElementById("play-beatles").addEventListener('click', event => {
+            toggleAudioClip(beatlesAudio, "play-beatles", "#beatles", beatlesAudio.paused);
+        });
+
+        document.getElementById("play-jacko").addEventListener('click', event => {
+            toggleAudioClip(jackoAudio, "play-jacko",  "#jacko", jackoAudio.paused);
+        });
+
+        document.getElementById("play-summer").addEventListener('click', event => {
+            toggleAudioClip(summerAudio, "play-summer", "#summer", summerAudio.paused);
+        });
+
+        const toggleAudioClip = (audio, target, selector, paused) => {
+            paused ? document.getElementById(target).innerHTML = "<i class=\"fa fa-pause\" aria-hidden=\"true\"></i>" : 
+                document.getElementById(target).innerHTML = "<i class=\"fa fa-play\" aria-hidden=\"true\"></i>";
+            
+            paused ? audio.play() : audio.pause();
+
+            const clipIntervalId = setInterval(() => {
+                const percent = audio.currentTime / audio.duration * 100;
+
+                // update linear gradient on sound clip span
+                d3.select(selector)
+                    .style('background', 'linear-gradient(to right, rgb(203, 196, 171)' + ' ' + percent + '%,' + 'rgba(203, 196, 171, 0.3)' + ' ' + (percent + 0.5) + '%)');
+
+                if(audio.currentTime === audio.duration) {
+                    clearInterval(clipIntervalId);
+                    // reset icon back to play
+                    document.getElementById(target).innerHTML = "<i class=\"fa fa-play\" aria-hidden=\"true\"></i>";
+                }
+            });
+        };
+    </script>
+    <script>
+        // main entry script
+        const authz = new SpotifyAuth();
+        const attentionEconomyPlot = new AttentionEconomyPlot();
+        const introsPlot = new IntrosPlot();
+        const songData = new SongData();
+        const player = new Player();
+
+        let timerIntervalId = null;
+        let contextStarted = false;
+
+        songData.init()
+            .then(() => {
+                attentionEconomyPlot.init();
+                // plot default selection
+                attentionEconomyPlot.plot(songData.getYearlyStats('title_words'), 'title_words');
+
+                document.getElementById("attention-category-select").addEventListener('change', event => {
+                    attentionEconomyPlot.plot(songData.getYearlyStats(event.target.value), event.target.value);
+                });
+
+                // TODO - remove filter once all vocal starts have been added
+                introsPlot.plot(songData.data.filter(song => song.vocals_start !== -0.001), songData.getYearlyStats('vocals_start'), player);
+
+                // find artist selection
+                const artistSelection = document.getElementById("artist-selection");
+                songData.getMostPopularArtists(5).map(artist => {
+                    // add them to the select element
+                    const option = document.createElement('option');
+                    option.value = artist;
+                    option.textContent = artist;
+                    artistSelection.appendChild(option);
+                });
+
+                artistSelection.addEventListener('change', event => {
+                    if(event.target.value !== "") {
+                        introsPlot.selectArtist(event.target.value);
+                    }
+                });
+
+                // toggle instrumentals event handler
+                let highlightInstrumentals = false;
+                document.getElementById("toggle-instrumentals-btn").addEventListener('click', event => {
+                    highlightInstrumentals = !highlightInstrumentals;
+                    highlightInstrumentals ? introsPlot.selectInstrumentals() : introsPlot.resetView();
+                });
+            });
+
+        document.getElementById("spotify-login-btn").addEventListener('click', event => {
+            authz.login();
+        });
+
+        window.onSpotifyWebPlaybackSDKReady = () => {
+            if(window.location.search.includes('code')) {
+                // we've been redirected with an authz code, now swap it for an access token
+                authz.getAccessToken()
+                    .then(() => {
+                        document.getElementById("login-toast").textContent = "Logged in!";
+                        player.init(authz.accessToken);
+                        createPlayer();
+                    });
+            }
+        };
+
+        const createPlayer = () => {
+            // steps to show context info
+            let step = 0;
+            const steps = [12, 40, 56, 73, 90, 108, 130];
+            const analyses = [
+                "0:12 – I Wanna Be Adored starts with an imperceptible haze of noise building up for the first few seconds. To put this into some perspective, nearly 75% of all song intros have completed by now.",
+                "0:40 – The haze builds up out of which Mani’s famous bassline comes into focus after 40 seconds. Amazingly, 96% of all songs have completed their intros by now and within the last decade, only Coldplay’s Paradise and Levels by Avicii have longer intros.",
+                "0:56 – This is followed by John Squire’s guitars, first a hauntingly ethereal scale riff building and complimenting the bass. The pieces are coming together now...",
+                "1:13 – Then Reni joins the mix with the bass drum at the 1:13 mark. It feels like the vocal is imminent but genius demands patience and we continue to be swept along in the glorious fug of noise. At this point 97% of all intros have completed, only instrumentals, The Final Countdown by Europe and some 90’s dance bangers (Utah Saints – Something Good, The Prodigy – No Good) still remain.",
+                "1:30 – The intro keeps building until Reni kicks us out of the fug and we’re struck squarely between the ears by Squire’s now iconic whirly guitar riff.",
+                "1:48 – But it isn’t until 1:48 that we hear Ian Brown’s vocals for the first time, “I don’t have to sell my soul//He’s already in me”, which brings one of the greatest intros in music to completion. By this point 98% of all intros have completed and only instrumentals remain.",
+                "You can carry on listening but feel free to interact with the chart by clicking on the songs for more info. You can replace 'I Wanna Be Adored' by playing a track from the info panel, close the panel, and then toggle the Pause/Continue button to see how other intros compare."
+            ];
+
+            const intervalFunc = () => {
+                player.instance.getCurrentState().then(state => {
+                    introsPlot.moveTimer(state.position / 1000);
+
+                    const percent = songData.data.filter(s => state.position / 1000 > s.vocals_start).length / songData.data.length * 100;
+                    document.getElementById('intro-percent').innerHTML = `${percent.toFixed(1)} %`;
+
+                    if(state.position / 1000 > steps[step]) {
+                        // update analysis text
+                        document.getElementById("analysis").textContent = analyses[step];
+                        // increment step
+                        step + 1 <= steps.length ? step += 1 : step;
+                    }
+
+                    if(state.paused) {
+                        clearInterval(timerIntervalId);
+                        timerIntervalId = null;
+                    }
+                });
+            };
+
+            document.getElementById("togglePlay").addEventListener('click', event => {
+                // show percentage ticker for context and initialise chart timer bar
+                document.getElementById("intro-percent").style.visibility = 'visible';
+                introsPlot.initTimerBar();
+
+                if(!contextStarted) {
+                    player.getTrack("758wEKVqfYopJIHYWdLVd4")
+                        .then(() => {
+                            player.togglePlay().then(() => {
+                                // update btn text
+                                const btnText = player._isPlaying ? 'Pause' : 'Continue';
+                                document.getElementById("togglePlay").textContent = btnText;
+
+                                if(!timerIntervalId) {
+                                    timerIntervalId = window.setInterval(intervalFunc, 150);
+                                }
+                            });
+                        });
+                } else {
+                    // context has begun
+                    player.togglePlay().then(() => {
+                        // update btn text
+                        const btnText = player._isPlaying ? 'Pause' : 'Continue';
+                        document.getElementById("togglePlay").textContent = btnText;
+
+                        // resume timer bar if playing again
+                        if(!timerIntervalId) {
+                            timerIntervalId = window.setInterval(intervalFunc, 150);
+                        }
+                    });
+                }
+
+                contextStarted = true;
+            });
+        };
+
+        // save as playlist
+        document.getElementById("spotify-save-playlist-btn").addEventListener('click', async event => {
+            document.getElementById("save-playlist-toast").textContent = "Saving...";
+
+            // get user id to create a new playlist
+            const userId = await fetch('https://api.spotify.com/v1/me', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authz.accessToken}`
+                }
+            })
+            .then(res => {
+                if(res.ok) {
+                    return res.json().then(data => data.id);
+                }
+
+                res.json().then(err => {
+                    document.getElementById("save-playlist-toast").textContent = `Error retrieving user details: ${err.error.message}. You need to be logged in to be able to save as a playlist.`;
+                    return null;
+                });
+            })
+            .catch(err => {
+                document.getElementById("save-playlist-toast").textContent = `Error retrieving user details: ${err.message}. You need to be logged in to be able to save as a playlist.`;
+                return null;
+            });
+
+            if(userId) {
+                // now we can create the playlist, saving the id so we can add tracks to it after
+                const {playlistId, playlistUrl} = await fetch(`https://api.spotify.com/v1/users/${userId}/playlists`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authz.accessToken}`
+                    },
+                    body: JSON.stringify({
+                        'name': 'Is The Song Intro Dead?',
+                        'description': 'Top 30 songs from every year of the charts',
+                        'public': false
+                    }),
+                })
+                .then(res => {
+                    if(res.ok) {
+                        // return playlist id so we can add tracks and playlist url so user can find it
+                        return res.json().then(playlist => {
+                            return {
+                                'playlistId': playlist.id,
+                                'playlistUrl': playlist.external_urls.spotify
+                            };
+                        });
+                    }
+                    
+                    res.json().then(err => {
+                        document.getElementById("save-playlist-toast").textContent = `Error creating playlist: ${err.error.message}`;
+                        return null;
+                    });
+                })
+                .catch(err => {
+                    document.getElementById("save-playlist-toast").textContent = `Error creating playlist: ${err.message}`;
+                    return null;
+                });
+
+                if(playlistId) {
+                    // finally, add songs
+                    let success = true;
+                    const ids = songData.data.map(song => song.id);
+                    // can only add in batches of 100
+                    for(let i = 0; i < Math.ceil(ids.length / 100); i++) {
+                        // playlist/tracks endpoint takes an array of Spotify URIs: 
+                        // spotify:track:{spotify id}
+                        const idsSlice = ids.slice(i * 100, (i + 1) * 100).map(id => `spotify:track:${id}`);
+
+                        await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks`, {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${authz.accessToken}`
+                            },
+                            body: JSON.stringify({
+                                'uris': idsSlice
+                            }),
+                        })
+                        .then(res => {
+                            if(!res.ok) {
+                                res.json().then(err => {
+                                    document.getElementById("save-playlist-toast").textContent = `Error saving tracks to playlist: ${err.error.message}`;
+                                    success = false;
+                                });
+                            }
+                        })
+                        .catch(err => {
+                            document.getElementById("save-playlist-toast").textContent = `Error saving tracks to playlist: ${err.message}`;
+                            success = false;
+                        });
+                    }
+
+                    const msg = success ? `Playlist saved! <a href="${playlistUrl}">Listen to it now</a>` : 'Something went wrong adding the tracks, please retry.';
+                    document.getElementById("save-playlist-toast").innerHTML = msg;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

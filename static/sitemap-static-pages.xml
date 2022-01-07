@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Song Intros -->
+    <url>
+        <loc>https://poc275.me/death-of-the-song-intro/</loc>
+        <changefreq>monthly</changefreq>
+        <priority>1.0</priority>
+        <lastmod>2022-01-07</lastmod>
+    </url>
+
     <!-- Peep Show Viz -->
     <url>
         <loc>https://poc275.me/peep-show-viz/</loc>
