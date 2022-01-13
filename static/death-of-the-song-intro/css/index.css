@@ -96,9 +96,14 @@ p {
     vertical-align: middle;
 }
 
+#intros-plot {
+    max-width: 1800px;
+    margin: 0 auto;
+}
+
 #analysis {
-    /* position: relative;
-    top: 60px; */
+    position: relative;
+    top: 40px;
     margin: 0 auto;
     max-width: 60rem;
     text-align: center;
