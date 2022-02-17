@@ -2,10 +2,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <!-- Song Intros -->
     <url>
+        <loc>https://poc275.me/my-year-in-music/</loc>
+        <changefreq>yearly</changefreq>
+        <lastmod>2022-02-17</lastmod>
+    </url>
+
+    <!-- Song Intros -->
+    <url>
         <loc>https://poc275.me/death-of-the-song-intro/</loc>
         <changefreq>monthly</changefreq>
         <priority>1.0</priority>
-        <lastmod>2022-01-13</lastmod>
+        <lastmod>2022-02-15</lastmod>
     </url>
 
     <!-- Peep Show Viz -->
