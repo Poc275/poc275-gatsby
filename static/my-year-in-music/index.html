@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Year in Music</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            line-height: 1.5;
+        }
+
+        #intro {
+            max-width: 800px;
+            margin-bottom: 3rem;
+        }
+
+        #plot {
+            margin: 1rem 0;
+        }
+
+        .artist {
+            color: #e6ab02;
+        }
+
+        .track {
+            color: #e7298a;
+        }
+
+        .highlight {
+            color: #7570b3;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        div.tooltip {
+            position: absolute;
+            max-width: 200px;
+            height: auto;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.4);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .stream {
+            fill: #e5e2dc;
+        }
+
+        .stream.highlighted {
+            fill: #7570b3;
+        }
+
+        .stream.same-song.same-artist {
+            fill: #e7298a;
+        }
+
+        .stream.same-artist {
+            fill: #e6ab02;
+        }
+
+        .x.axis .tick text {
+            font-size: large;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>My 2021 in Music</h1>
+        <p>I came across this <a href="https://observablehq.com/@sahilchinoy/2021-in-music">really cool visualisation on Observable</a> by 
+            <a href="https://sahilchinoy.com/">Sahil Chinoy</a> and I wondered what my own data would look like. Same deal, each dot is one stream, mouse over 
+            to see the <span class="track bold">same track</span> and the <span class="artist bold">same artist</span>, or search to <span class="highlight bold">highlight</span> 
+            a specific artist. You can also stack the dots to view in sequential order. Data is from my own Spotify personal data, you can request your own 
+            <a href="https://support.spotify.com/us/article/data-rights-and-privacy-settings/">here</a>.
+        </p>
+        <p>It's sparser than I imagined. I thought I'd listened to more music last year. Also judging by the clumpiness I've been skipping a lot, which I need to 
+            cut down on! In my defence I did spend a lot of time listening to tracks as part of <a href="https://poc275.me/death-of-the-song-intro/">The Death of 
+            the Song Intro project</a> I was working on throughout the year, so if anything cheesy has found its way here then that's the official line I'm 
+            taking 🤥. This also explains the amount of plays of I Wanna Be Adored by The Stone Roses around Christmas time.
+        </p>
+        <p>There weren't any real revelations. Mogwai were on heavy rotation, <a href="https://open.spotify.com/album/7a6DbfLdir3tz1U8xmCzaM?si=MBZU-GloTkGqzxUVdgLA7w">As 
+            the Love Continues</a> was probably my record of the year. Lots of Hans Zimmer and Max Richter which helped me focus at work. No surprise to see lots of 
+            Manic Street Preachers listens (fave band). A lot of Fontaines D.C, IDLES, Pillow Queens, Sleaford Mods (fave new/new(ish) bands). Old classics that I'm 
+            always revisiting (Sea Power, Smiths, Nick Cave, PJ Harvey, Low, Run The Jewels, Radiohead), and you can also see that I have a penchant for listening to 
+            Ricky Gervais podcasts at night, which seems weird as Ricky's laugh isn't exactly somnambulant, but hey it works for me.
+        </p>
+    </div>
+
+    <div>
+        <datalist id="artists"></datalist>
+        <input autocomplete="on" list="artists" placeholder="Highlight artist..." onchange="artistSelected(event)" />
+        <input type="checkbox" id="stacked" name="stacked" onclick="stackDotsCheckboxSelected(event)" />
+        <label for="stacked">Stack Dots</label>
+    </div>
+
+    <div id="plot"></div>
+
+    <script src="moment.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        const radius = 3.5;
+        const width = 1600;
+        const height = 365 * (radius * 2);
+        const margin = {
+            top: 40,
+            right: 20,
+            bottom: 40,
+            left: 50
+        };
+        let stacked = false;
+
+        const xScale = d3.scaleTime()
+            .range([0, width]);
+
+        const xScaleStacked = d3.scaleLinear()
+            .range([0, width]);
+
+        const yScale = d3.scaleTime()
+            .domain([new Date(2021, 0, 1), new Date(2022, 1, 1)])
+            .range([0, height]);
+
+        const xAxisTickLabels = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘", "🌑"];
+        const xAxis = d3.axisTop(xScale)
+            .ticks(d3.timeHour.every(3))
+            .tickFormat((d, i) => xAxisTickLabels[i])
+            .tickSize(0)
+            .tickPadding(10);
+
+        const yAxis = d3.axisLeft(yScale)
+            .ticks(d3.timeMonth.every(1))
+            .tickFormat(x => x.toLocaleString('default', { month: 'short' }))
+            .tickSize(0)
+            .tickPadding(10);
+
+        const getDate = (endTime) => {
+            return moment(endTime.split(" ")[0], "YYYY-MM-DD").toDate();
+        };
+
+        const getTime = (endTime) => {
+            // just time, d3.scaleTime default domain is one full day 
+            // on Jan 1st 2000, so use that
+            const date = `2000-01-01 ${endTime.split(" ")[1]}`;
+            return moment(date, "YYYY-MM-DD hh:mm").toDate();
+        };
+
+        const getDateTime = (endTime) => {
+            return moment(endTime, "YYYY-MM-DD hh:mm").toDate();
+        };
+
+        const highlightSamesies = (artist, track) => {
+            svg.selectAll('.stream')
+                .classed("same-song", d => d.trackName === track && d.artistName === artist ? true : false);
+
+            svg.selectAll('.stream')
+                .classed("same-artist", d => d.artistName === artist ? true : false)
+        };
+
+        const resetHighlights = () => {
+            svg.selectAll('.stream')
+                .classed("same-song", false)
+                .classed("same-artist", false);
+        };
+
+        // tooltip
+        const tooltip = d3.select("body")
+            .append("div")
+            .attr("class", "tooltip")
+            .attr("opacity", 0);
+
+        const plot = (data) => {
+            // update linear scale now we have the grouped data
+            xScaleStacked.domain([0, d3.max(data.values(), d => d.length)]);
+
+            svg.selectAll('.stream-day')
+                .data(data)
+                .enter()
+                    .append('g')
+                    .attr('class', 'stream-day')
+                    .selectAll('.stream')
+                    .data(d => d[1])
+                    .enter()
+                        .append('circle')
+                        .attr('class', 'stream')
+                        .attr('cx', d => xScale(getTime(d.endTime)))
+                        .attr('cy', d => yScale(getDate(d.endTime)))
+                        .attr('r', radius)
+                        .on('click', (event, d) => console.log(d))
+                        .on('mouseover', (event, d) => {
+                            highlightSamesies(d.artistName, d.trackName);
+
+                            const tipText = `<span class="artist">${d.artistName}</span> - <span class="track">${d.trackName}</span><br />
+                                ${getDateTime(d.endTime).toLocaleString()}`;
+                            tooltip.html(tipText)
+                                .style("left", `${event.pageX + 28}px`)
+                                .style("top", `${event.pageY - 28}px`);
+
+                            tooltip.transition()
+                                .duration(500)
+                                .style("opacity", 0.9);
+                        })
+                        .on('mouseout', (event, d) => {
+                            resetHighlights();
+                            
+                            tooltip.transition()
+                                .duration(500)
+                                .style("opacity", 0);
+                        });
+        };
+
+        const filterUnwantedSongs = (rawData) => {
+            return d3.csv("songs_to_remove.csv").then(res => {
+                res.forEach(songToRemove => {
+                    rawData = rawData.filter(song => {
+                        if(song.artistName === songToRemove.artist && 
+                            song.trackName === songToRemove.title) {
+                                return false;
+                        }
+
+                        return true;
+                    });
+                });
+
+                return rawData;
+            });
+        };
+
+        const saveDatasetToFile = (data) => {
+            var dataBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            const textFile = window.URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.setAttribute('download', 'dataset.json');
+            link.href = textFile;
+            document.body.appendChild(link);
+        };
+
+        const svg = d3.select('#plot')
+            .append('svg')
+            .attr('width', width + margin.right + margin.left)
+            .attr('height', height + margin.top + margin.bottom)
+            .append('g')
+            .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+        // draw axes
+        svg.append('g')
+            .attr('class', 'x axis')
+            .call(xAxis)
+            .select(".domain").remove();
+
+        svg.append('g')
+            .attr('class', 'y axis')
+            .call(yAxis)
+            .select(".domain").remove();
+
+        svg.select(".y.axis")
+            .selectAll("text")
+                .attr("dx", -10);
+
+        const artistSelected = (event) => {
+            svg.selectAll('.stream')
+                .classed("highlighted", d => d.artistName === event.target.value ? true : false);
+        };
+
+        const stackDotsCheckboxSelected = (event) => {
+            stacked = !stacked;
+
+            if(stacked) {
+                svg.selectAll('.stream')
+                    .transition()
+                    .duration(1000)
+                        .attr('cx', d => xScaleStacked(d.stackedIndex));
+            } else {
+                svg.selectAll('.stream')
+                    .transition()
+                    .duration(1000)
+                        .attr('cx', d => xScale(getTime(d.endTime)));
+            }
+        };
+
+        const populateArtistsDropdown = (data) => {
+            artists = [];
+            data.forEach(stream => {
+                if(artists.indexOf(stream.artistName) === -1) {
+                    artists.push(stream.artistName);
+                    // add to datalist
+                    const option = document.createElement('option');
+                    option.setAttribute("value", stream.artistName);
+                    document.getElementById("artists").appendChild(option);
+                }
+            });
+        };
+
+        d3.json('final-cleaned-dataset.json').then(res => {
+            // ignore anything played for less than x seconds
+            const playedStreams = res.filter(stream => stream.msPlayed < 2000 ? false : true);
+
+            // group data by day (endTime = 2022-01-29 12:05) and add an index
+            // to each stream to make stacking easier
+            const grouped = d3.group(playedStreams, d => getDate(d.endTime));
+            for(const [k, v] of grouped) {
+                v.map((stream, idx) => stream.stackedIndex = idx);
+            }
+
+            plot(grouped);
+            populateArtistsDropdown(playedStreams);
+        });
+
+    </script>
+</body>
+</html>
