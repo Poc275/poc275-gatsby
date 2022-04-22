@@ -4,7 +4,7 @@ import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
-import { faGithub, faStackOverflow, faLinkedinIn, faMediumM } from '@fortawesome/free-brands-svg-icons'
+import { faGithub, faStackOverflow, faLinkedinIn, faDev } from '@fortawesome/free-brands-svg-icons'
 import styles from './footer.module.scss'
 
 export default () => (
@@ -19,7 +19,7 @@ export default () => (
                     <FontAwesomeIcon icon={faGithub} size="2x" />
                 </a>
 
-                <a href="https://stackoverflow.com/story/poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
+                <a href="https://stackoverflow.com/users/1929718/poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
                     <FontAwesomeIcon icon={faStackOverflow} size="2x" />
                 </a>
 
@@ -27,8 +27,8 @@ export default () => (
                     <FontAwesomeIcon icon={faLinkedinIn} size="2x" />
                 </a>
 
-                <a href="https://medium.com/@poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
-                    <FontAwesomeIcon icon={faMediumM} size="2x" />
+                <a href="https://dev.to/poc275" className="mx-2" target="_blank" rel="noopener noreferrer">
+                    <FontAwesomeIcon icon={faDev} size="2x" />
                 </a>
             </Col>
         </Row>
