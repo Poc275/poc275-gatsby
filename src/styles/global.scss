@@ -345,3 +345,15 @@ video {
     ),
     url('../images/project-grid/year-in-music.jpg');
 }
+
+#wasm-sw-project {
+    background-image: url('../images/project-grid/wasm-software-renderer.jpg');
+}
+
+#wasm-sw-project:hover {
+    background-image: linear-gradient(
+        rgba(0, 0, 0, 0.5),
+        rgba(0, 0, 0, 0.5)
+    ),
+    url('../images/project-grid/wasm-software-renderer.jpg');
+}

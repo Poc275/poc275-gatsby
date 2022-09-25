@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-    <!-- Song Intros -->
+    <!-- Web Assembly Software Renderer -->
+    <url>
+        <loc>https://poc275.me/wasm-sw/WasmSoftwareRenderer.html</loc>
+        <changefreq>monthly</changefreq>
+        <lastmod>2022-09-25</lastmod>
+    </url>
+
+    <!-- My Year in Music -->
     <url>
         <loc>https://poc275.me/my-year-in-music/</loc>
         <changefreq>yearly</changefreq>
@@ -10,7 +17,7 @@
     <!-- Song Intros -->
     <url>
         <loc>https://poc275.me/death-of-the-song-intro/</loc>
-        <changefreq>monthly</changefreq>
+        <changefreq>yearly</changefreq>
         <priority>1.0</priority>
         <lastmod>2022-02-15</lastmod>
     </url>
@@ -18,7 +25,7 @@
     <!-- Peep Show Viz -->
     <url>
         <loc>https://poc275.me/peep-show-viz/</loc>
-        <changefreq>monthly</changefreq>
+        <changefreq>yearly</changefreq>
         <priority>1.0</priority>
         <lastmod>2021-04-05</lastmod>
     </url>

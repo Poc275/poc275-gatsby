@@ -1,0 +1,503 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Wasm Software Renderer</title>
+    <!-- dat.GUI -->
+    <script type="text/javascript" src="dat.gui.min.js"></script>
+    <style>
+      body {
+        background-color: black;
+      }
+
+      .emscripten { 
+        padding-right: 0;
+        /* margin-left: auto; */
+        /* margin-right: auto; */
+        display: block;
+      }
+
+      textarea.emscripten {
+        font-family: monospace;
+        width: 80%;
+      }
+
+      div.emscripten {
+        /* text-align: center; */
+        color: #fff;
+      }
+
+      /* div.emscripten_border {
+        border: 1px solid black;
+      } */
+
+      /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+      canvas.emscripten {
+        border: 0px none;
+        background-color: black;
+      }
+
+      .spinner {
+        height: 50px;
+        width: 50px;
+        /* margin: 0px auto; */
+        -webkit-animation: rotation .8s linear infinite;
+        -moz-animation: rotation .8s linear infinite;
+        -o-animation: rotation .8s linear infinite;
+        animation: rotation 0.8s linear infinite;
+        border-left: 10px solid rgb(0,150,240);
+        border-right: 10px solid rgb(0,150,240);
+        border-bottom: 10px solid rgb(0,150,240);
+        border-top: 10px solid rgb(100,0,200);
+        border-radius: 100%;
+        background-color: rgb(200,100,250);
+      }
+      @-webkit-keyframes rotation {
+        from {-webkit-transform: rotate(0deg);}
+        to {-webkit-transform: rotate(360deg);}
+      }
+      @-moz-keyframes rotation {
+        from {-moz-transform: rotate(0deg);}
+        to {-moz-transform: rotate(360deg);}
+      }
+      @-o-keyframes rotation {
+        from {-o-transform: rotate(0deg);}
+        to {-o-transform: rotate(360deg);}
+      }
+      @keyframes rotation {
+        from {transform: rotate(0deg);}
+        to {transform: rotate(360deg);}
+      }
+
+    </style>
+  </head>
+  <body>
+    <!-- Loading spinner -->
+    <figure style="overflow:visible;" id="spinner">
+      <div class="spinner"></div>
+    </figure>
+
+    <div class="emscripten" id="status">Downloading...</div>
+
+    <div class="emscripten">
+      <progress value="0" max="100" id="progress" hidden=1></progress>  
+    </div>
+
+    <div class="emscripten_border">
+      <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+    </div>
+
+    <script type='text/javascript'>
+      var statusElement = document.getElementById('status');
+      var progressElement = document.getElementById('progress');
+      var spinnerElement = document.getElementById('spinner');
+
+      var Module = {
+        preRun: [],
+        postRun: [],
+        onRuntimeInitialized: function() {
+          setupDatGui(this);
+        },
+        print: (function() {
+          var element = document.getElementById('output');
+          if (element) element.value = ''; // clear browser cache
+          return function(text) {
+            if (arguments.length > 1) text = Array.prototype.slice.call(arguments).join(' ');
+            // These replacements are necessary if you render to raw HTML
+            //text = text.replace(/&/g, "&amp;");
+            //text = text.replace(/</g, "&lt;");
+            //text = text.replace(/>/g, "&gt;");
+            //text = text.replace('\n', '<br>', 'g');
+            console.log(text);
+            if (element) {
+              element.value += text + "\n";
+              element.scrollTop = element.scrollHeight; // focus on bottom
+            }
+          };
+        })(),
+        canvas: (function() {
+          var canvas = document.getElementById('canvas');
+
+          // As a default initial behavior, pop up an alert when webgl context is lost. To make your
+          // application robust, you may want to override this behavior before shipping!
+          // See http://www.khronos.org/registry/webgl/specs/latest/1.0/#5.15.2
+          canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+
+          return canvas;
+        })(),
+        setStatus: function(text) {
+          if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+          if (text === Module.setStatus.last.text) return;
+          var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+          var now = Date.now();
+          if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+          Module.setStatus.last.time = now;
+          Module.setStatus.last.text = text;
+          if (m) {
+            text = m[1];
+            progressElement.value = parseInt(m[2])*100;
+            progressElement.max = parseInt(m[4])*100;
+            progressElement.hidden = false;
+            spinnerElement.hidden = false;
+          } else {
+            progressElement.value = null;
+            progressElement.max = null;
+            progressElement.hidden = true;
+            if (!text) spinnerElement.hidden = true;
+          }
+          statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: function(left) {
+          this.totalDependencies = Math.max(this.totalDependencies, left);
+          Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+        }
+      };
+      Module.setStatus('Downloading...');
+      window.onerror = function() {
+        Module.setStatus('Exception thrown, see JavaScript console');
+        spinnerElement.style.display = 'none';
+        Module.setStatus = function(text) {
+          if (text) console.error('[post-exception status] ' + text);
+        };
+      };
+    </script>
+
+    <!-- dat.GUI code -->
+    <script type="text/javascript">
+      function setupDatGui(module) {
+        const gui = new dat.GUI();
+        gui.width = 300;
+
+        // C++ exported function bindings
+        const set_ambient_light_colour_func = module.cwrap('set_ambient_light_colour', null, ['number', 'number', 'number']);
+        const set_ambient_light_reflection_func = module.cwrap('set_ambient_light_reflection', null, ['number', 'number', 'number']);
+        const switch_directional_lighting_func = module.cwrap('switch_directional_lighting', null);
+        const set_direction_light_colour_func = module.cwrap('set_direction_light_colour', null, ['number', 'number', 'number']);
+        const set_direction_light_position_func = module.cwrap('set_direction_light_position', null, ['number', 'number', 'number']);
+        const switch_point_light_func = module.cwrap('switch_point_light', null, ['number']);
+        const set_point_light_colour_func = module.cwrap('set_point_light_colour', null, ['number', 'number', 'number']);
+        const set_point_light_position_func = module.cwrap('set_point_light_position', null, ['number', 'number', 'number']);
+        const set_point_light_attenuation_func = module.cwrap('set_point_light_attenuation', null, ['number', 'number', 'number']);
+        const translate_model_func = module.cwrap('translate_model', null, ['number', 'number', 'number']);
+        const set_model_diffuse_colour_func = module.cwrap('set_model_diffuse_colour', null, ['number', 'number', 'number']);
+        const auto_rotate_model_func = module.cwrap('auto_rotate_model', null);
+        const rotate_model_func = module.cwrap('rotate_model', null, ['number', 'number', 'number']);
+        const set_auto_rotate_speed_func = module.cwrap('set_auto_rotate_speed', null, ['number']);
+
+        // Model manipulation controls
+        const modelParams = {
+            posX: 0,
+            posY: 0,
+            posZ: 0,
+            diffuseRed: 0.5,
+            diffuseGreen: 0.5,
+            diffuseBlue: 0.5,
+            animated: true,
+            speed: 1,
+            rotX: 0,
+            rotY: 0,
+            rotZ: 0
+        };
+
+        const modelParamsGui = gui.addFolder("Model");
+        modelParamsGui.add(modelParams, 'animated')
+          .name('Animate')
+          .onChange(() => {
+            auto_rotate_model_func();
+          });
+        modelParamsGui.add(modelParams, 'speed')
+          .min(1)
+          .max(5)
+          .step(1)
+          .name('Animation Speed')
+          .onChange(() => {
+            set_auto_rotate_speed_func(modelParams.speed / 100);
+          });
+        modelParamsGui.add(modelParams, 'posX')
+          .min(-100)
+          .max(100)
+          .step(0.01)
+          .name('X Position')
+          .onChange(() => {
+            translate_model_func(modelParams.posX,
+                                 modelParams.posY,
+                                 modelParams.posZ);
+          });
+        modelParamsGui.add(modelParams, 'posY')
+          .min(-80)
+          .max(80)
+          .step(0.01)
+          .name('Y Position')
+          .onChange(() => {
+            translate_model_func(modelParams.posX,
+                                 modelParams.posY,
+                                 modelParams.posZ);
+          });
+        modelParamsGui.add(modelParams, 'posZ')
+          .min(-10)
+          .max(50)
+          .step(0.01)
+          .name('Z Position')
+          .onChange(() => {
+            translate_model_func(modelParams.posX,
+                                 modelParams.posY,
+                                 modelParams.posZ);
+          });
+        modelParamsGui.add(modelParams, 'rotX')
+          .min(0)
+          .max(Math.PI * 2)
+          .step(0.01)
+          .name('X Rotation')
+          .onChange(() => {
+            rotate_model_func(modelParams.rotX,
+                              modelParams.rotY,
+                              modelParams.rotZ);
+          });
+        modelParamsGui.add(modelParams, 'rotY')
+          .min(0)
+          .max(Math.PI * 2)
+          .step(0.01)
+          .name('Y Rotation')
+          .onChange(() => {
+            rotate_model_func(modelParams.rotX,
+                              modelParams.rotY,
+                              modelParams.rotZ);
+          });
+        modelParamsGui.add(modelParams, 'rotZ')
+          .min(0)
+          .max(Math.PI * 2)
+          .step(0.01)
+          .name('Z Rotation')
+          .onChange(() => {
+            rotate_model_func(modelParams.rotX,
+                              modelParams.rotY,
+                              modelParams.rotZ);
+          });
+        modelParamsGui.add(modelParams, 'diffuseRed')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Diffuse Red')
+          .onChange(() => {
+            set_model_diffuse_colour_func(modelParams.diffuseRed,
+                                          modelParams.diffuseGreen,
+                                          modelParams.diffuseBlue);
+          });
+        modelParamsGui.add(modelParams, 'diffuseGreen')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Diffuse Green')
+          .onChange(() => {
+            set_model_diffuse_colour_func(modelParams.diffuseRed,
+                                          modelParams.diffuseGreen,
+                                          modelParams.diffuseBlue);
+          });
+        modelParamsGui.add(modelParams, 'diffuseBlue')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Diffuse Blue')
+          .onChange(() => {
+            set_model_diffuse_colour_func(modelParams.diffuseRed,
+                                          modelParams.diffuseGreen,
+                                          modelParams.diffuseBlue);
+          });
+
+        // Ambient Lighting controls
+        const ambientLightParams = {
+            colour: [0, 128, 128],
+            reflectionRed: 0.2,
+            reflectionGreen: 0.2,
+            reflectionBlue: 0.2
+        };
+
+        const ambientLighGui = gui.addFolder("Ambient Lighting");
+        ambientLighGui.addColor(ambientLightParams, 'colour')
+          .name('Colour')
+          .onChange(() => {
+            set_ambient_light_colour_func(ambientLightParams.colour[0],
+                                          ambientLightParams.colour[1],
+                                          ambientLightParams.colour[2]);
+        });
+
+        ambientLighGui.add(ambientLightParams, 'reflectionRed')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Red Reflection')
+          .onChange(() => {
+            set_ambient_light_reflection_func(ambientLightParams.reflectionRed,
+                                              ambientLightParams.reflectionGreen,
+                                              ambientLightParams.reflectionBlue);
+          });
+
+        ambientLighGui.add(ambientLightParams, 'reflectionGreen')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Green Reflection')
+          .onChange(() => {
+            set_ambient_light_reflection_func(ambientLightParams.reflectionRed,
+                                              ambientLightParams.reflectionGreen,
+                                              ambientLightParams.reflectionBlue);
+          });
+
+        ambientLighGui.add(ambientLightParams, 'reflectionBlue')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Blue Reflection')
+          .onChange(() => {
+            set_ambient_light_reflection_func(ambientLightParams.reflectionRed,
+                                              ambientLightParams.reflectionGreen,
+                                              ambientLightParams.reflectionBlue);
+          });
+
+        // Directional lighting controls
+        const directionLightParams = {
+            on: true,
+            colour: [0, 255, 255],
+            directionX: 1,
+            directionY: 0,
+            directionZ: 1
+        };
+
+        const directionLighGui = gui.addFolder("Direction Lighting");
+        directionLighGui.add(directionLightParams, 'on')
+          .name('Switch')
+          .onChange(() => {
+            switch_directional_lighting_func();
+        });
+        directionLighGui.addColor(directionLightParams, 'colour')
+          .name('Colour')
+          .onChange(() => {
+            set_direction_light_colour_func(directionLightParams.colour[0],
+                                            directionLightParams.colour[1],
+                                            directionLightParams.colour[2]);
+        });
+        directionLighGui.add(directionLightParams, 'directionX')
+          .min(-1)
+          .max(1)
+          .step(0.01)
+          .name('X Direction')
+          .onChange(() => {
+            set_direction_light_position_func(directionLightParams.directionX,
+                                              directionLightParams.directionY,
+                                              directionLightParams.directionZ);
+          });
+        directionLighGui.add(directionLightParams, 'directionY')
+          .min(-1)
+          .max(1)
+          .step(0.01)
+          .name('Y Direction')
+          .onChange(() => {
+            set_direction_light_position_func(directionLightParams.directionX,
+                                              directionLightParams.directionY,
+                                              directionLightParams.directionZ);
+          });
+        directionLighGui.add(directionLightParams, 'directionZ')
+          .min(-1)
+          .max(1)
+          .step(0.01)
+          .name('Z Direction')
+          .onChange(() => {
+            set_direction_light_position_func(directionLightParams.directionX,
+                                              directionLightParams.directionY,
+                                              directionLightParams.directionZ);
+          });
+
+        // Point lighting controls
+        const pointLightParams = {
+            on: true,
+            colour: [255, 255, 0],
+            posX: 0,
+            posY: 0,
+            posZ: -20,
+            attenuationA: 0,
+            attenuationB: 1,
+            attenuationC: 0
+        };
+
+        const pointLighGui = gui.addFolder("Point Lighting");
+        pointLighGui.add(pointLightParams, 'on')
+          .name('Switch')
+          .onChange(() => {
+            switch_point_light_func(pointLightParams.on);
+        });
+        pointLighGui.addColor(pointLightParams, 'colour')
+          .name('Colour')
+          .onChange(() => {
+            set_point_light_colour_func(pointLightParams.colour[0],
+                                        pointLightParams.colour[1],
+                                        pointLightParams.colour[2]);
+          });
+        pointLighGui.add(pointLightParams, 'posX')
+          .min(-50)
+          .max(50)
+          .step(0.1)
+          .name('X Position')
+          .onChange(() => {
+            set_point_light_position_func(pointLightParams.posX,
+                                          pointLightParams.posY,
+                                          pointLightParams.posZ);
+          });
+        pointLighGui.add(pointLightParams, 'posY')
+          .min(-50)
+          .max(50)
+          .step(0.1)
+          .name('Y Position')
+          .onChange(() => {
+            set_point_light_position_func(pointLightParams.posX,
+                                          pointLightParams.posY,
+                                          pointLightParams.posZ);
+          });
+        pointLighGui.add(pointLightParams, 'posZ')
+          .min(-50)
+          .max(50)
+          .step(0.1)
+          .name('Z Position')
+          .onChange(() => {
+            set_point_light_position_func(pointLightParams.posX,
+                                          pointLightParams.posY,
+                                          pointLightParams.posZ);
+          });
+        pointLighGui.add(pointLightParams, 'attenuationA')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Attenuation Coeff A')
+          .onChange(() => {
+            set_point_light_attenuation_func(pointLightParams.attenuationA,
+                                             pointLightParams.attenuationB,
+                                             pointLightParams.attenuationC);
+          });
+        pointLighGui.add(pointLightParams, 'attenuationB')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Attenuation Coeff B')
+          .onChange(() => {
+            set_point_light_attenuation_func(pointLightParams.attenuationA,
+                                             pointLightParams.attenuationB,
+                                             pointLightParams.attenuationC);
+          });
+        pointLighGui.add(pointLightParams, 'attenuationC')
+          .min(0)
+          .max(1)
+          .step(0.01)
+          .name('Attenuation Coeff C')
+          .onChange(() => {
+            set_point_light_attenuation_func(pointLightParams.attenuationA,
+                                             pointLightParams.attenuationB,
+                                             pointLightParams.attenuationC);
+          });
+      }
+    </script>
+    <script async type="text/javascript" src="WasmSoftwareRenderer.js"></script>
+  </body>
+</html>
+
+
