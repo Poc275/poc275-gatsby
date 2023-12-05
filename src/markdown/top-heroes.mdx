@@ -12,21 +12,12 @@ link: ""
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera, faVideo, faQuoteLeft } from '@fortawesome/free-solid-svg-icons'
-import loginGif from '../images/login-screen.gif'
-import obamaFront from '../images/obama_card_front.jpg'
-import obamaRear from '../images/obama_card_rear.jpg'
 
 ### Six months earlier... 🍺
 
 I was down the pub with a group of friends, Brexit was a painful, not so distant memory and The Donald had just lost the popular vote to become 
 the 45th President of the United States. Over a drink and multiple “How has this happened?” platitudes bordering on the absurd we decided to don 
-our geek capes (hats? costumes?) and do something about it. This is how revolutions start, right? Hardly Lenin in Vienna, but in our own indomitable 
-fashion we set about making our dent in the world.
-
-![the night at the pub in Obama memes](images/top-heroes-project/obama_1.png)
-<figcaption>
-    <FontAwesomeIcon icon={faCamera} /> Drinks were imbibed | It got political | Disillusionment inevitably followed.
-</figcaption>
+our geek capes (hats? costumes?) and do something about it.
 
 We decided that reminding people that, although it may be a bad time now, there are people out there that can still provide us with hope in this 
 post truth world. With Donald Trump victory rallies piercing the background it was inevitable 😊 that we’d converge on the old card game “Top Trumps” as 
@@ -34,11 +25,6 @@ the format for our nascent showcase of extraordinary human beings. For those sou
 played on computers, Top Trumps is a card game where a deck of cards is based on a certain theme (usually cars) and each card is scored on certain 
 categories (top speed, horsepower, size etc.) with the aim being to compare these values to try and “trump” the opponent’s score and win the card. A 
 web-based revamp of this alleged classic game was in order, Top Heroes was born! 🍾
-
-![the idea forms in Obama memes](images/top-heroes-project/obama_2.png)
-<figcaption>
-    <FontAwesomeIcon icon={faCamera} /> An idea forms | The pondering stage... | World domination must surely follow!
-</figcaption>
 
 ### More drink... 🍻
 
@@ -66,11 +52,6 @@ straight-forward with collections in MongoDB for cards and users. I found the No
 it was easier for redundancy to creep in which a traditional SQL approach would have caught through normalisation. The schema-less nature helped during the 
 early development stages, but eventually most data is structured, ours being no different, so Mongoose was used as an ORM providing data validation.
 
-<img src={loginGif} alt="login screen animation" />
-<figcaption>
-    <FontAwesomeIcon icon={faVideo} /> Login screen mobile view.
-</figcaption>
-
 On the client-side Angular.js gave us the ability to make a dynamic web application. By making AJAX requests under the hood to update the game whilst in 
 progress the users are under the impression that it is a “live game” and they’re not presented with a page refresh every time data needs updating. The 
 MVC approach in Angular.js is familiar to most web developers which helped get up to speed quickly. The only barrier being the full indoctrination into 
@@ -78,20 +59,6 @@ how things are named, and features such as directives are tricky to get right (t
 tags controlling their own behaviour) which ultimately made it worthwhile as you end up with a nice separation of concerns and semantic markup. The UI was 
 created using the excellent Angular.js material library which provided UI controls inspired by the Google Material Design language. Socket.io was used to 
 provide real-time communication between the players during a game.
-
-<a href={obamaFront}>
-    <img src={obamaFront} alt="barack obama's top heroes card - front" />
-</a>
-<figcaption>
-    <FontAwesomeIcon icon={faCamera} /> Barack Obama's Top Heroes card ‐ front.
-</figcaption>
-
-<a href={obamaRear}>
-    <img src={obamaRear} alt="barack obama's top heroes card - rear" />
-</a>
-<figcaption>
-    <FontAwesomeIcon icon={faCamera} /> Barack Obama's Top Heroes card ‐ rear.
-</figcaption>
 
 We decided to make use of Azure as our hosting platform. This way we could scale when the disaffected masses came calling to play. Azure Web Apps was used 
 to host the application. This PaaS offering meant that we didn’t have to worry about setting up and maintaining infrastructure. Azure Blob Storage was used 
