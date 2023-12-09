@@ -35,9 +35,8 @@ time there's definitely a part of me that wants to slack off, join a band and be
 who wants to lay in bed and watch cartoons and old movies all day. My whole life is a series of stratagems to avoid, and outwit, that guy.” This conflict is perfectly 
 demonstrated in Peep Show and if it is indeed the case that we all contain multitudes, well, I contain Mark and Jez.
 
-I was determined to make Anthony Bourdain proud by resisting the urge to watch all nine series flat out, so something creative was in order. Then I found that the scripts 
-had already been digitised and made available, [thank-you you lovely people](https://transcripts.fandom.com/wiki/Peep_Show), so the idea hit me to try and do some data 
-visualisation on the scripts.
+I was determined to make Anthony Bourdain proud by resisting the urge to watch all nine series flat out, so the idea hit me to try and do some data 
+visualisation on the show.
 
 ### Data Gathering
 
@@ -45,16 +44,14 @@ visualisation on the scripts.
 >
 > <cite>Mark &mdash; Series 3, Episode 3.</cite>
 
-The script data was easily scraped into a CSV file and luckily, the internal thoughts were marked in parentheses so I was able to parse them appropriately. One of 
-my earliest ideas was to see how much Mark and Jez spent with their internal thoughts, so this was a vital piece of data. The scripts also contain scene changes, so with a 
-bit of manual work, I was able to scrape the location of each line which could make for some interesting analysis. The only time-consuming part was analysing who the line 
-was directed at (the script data only contained the speaker). For the most part you can infer who was being spoken to from the flow of the conversation but at 
-certain points I had to revisit the episode to find out exactly who it was. I suppose I could have come up with a more technical solution, but I was already re-watching the 
-show so it didn't seem too much of a chore to do this manually, and hey, there's **always** a bit of manual work involved in any good data viz project.
+I had to scrape together the script data from various online sources and by watching the series (again), but hey, there's **always** a bit of manual work 
+involved in any good data viz project! I collected the lines, marking internal lines separately as one of my earliest ideas was to see how much Mark and Jez 
+spent with their internal thoughts, so this was a vital piece of data. I also collected the location of each line, which could make for some interesting 
+analysis. Who was being spoken to was also collected as I thought it would be interesting to see the breakdown of conversations.
 
 ### Visualisation
 
-With such a large amount of data there wasn't going to be a single chart type that would accurately reflect it all. Instead, my idea was to break down the scripts into lower 
+With such a large amount of data there wasn't going to be a single chart type that would accurately reflect it all. Instead, my idea was to break down the data into lower 
 levels of granularity starting from overall conversation flows, then to lines, then sentences and finally down to individual words. This approach was inspired by the 
 astonishing [Wind and Words project by Impossible Bureau](http://beta.wind-and-words.com/) which visualised Game of Thrones data in a similar way. Unfortunately, the 
 live site seems to be down at the time of writing but it's well worth checking back to see if it comes back up at some point in the future, it was a truly outstanding piece of 
@@ -239,12 +236,7 @@ over the entire show.
 
 I have some other ideas for visualisations that I'd like to add in the future such as vocabulary; I suspect Mark is the better wordsmith, is this true? More “inner thoughts” 
 analysis such as which characters cause Mark and Jez to ruminate the most. Some grammar analysis and the question every Peep Show fan wants the answer to, the number 
-of “El Dude Brother” salutes.
-
-![el dude brothers](images/peep-show-project/el-dude-bros.jpg)
-<figcaption>
-    <FontAwesomeIcon icon={faCamera} /> Ehhhhhh! Ehhhhhh!
-</figcaption>
+of “El Dude Brother” salutes. Ehhhhhh! Ehhhhhh!!
 
 Stay tuned for more updates and I'd be really pleased to hear any feedback, good or bad! Either via a [GitHub issue](https://github.com/Poc275/peep-show-viz/issues/new) or 
-[more informally](mailto:poc275@gmail.com). The [script dataset](/peep-show-script-data.csv) is also available for anyone else who'd like to partake in such shenanigans.
+[more informally](mailto:poc275@gmail.com).
