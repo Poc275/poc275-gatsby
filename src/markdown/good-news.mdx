@@ -5,7 +5,6 @@ period: "April 2018 (ongoing)"
 featuredImage: images/good-news-project/good-news-bg.jpg
 languages: "C# | Python"
 tools: ".NET Core | Azure Functions | Orange"
-demo: "https://goodnws.azurewebsites.net/"
 class: "good-news-project"
 static: false
 link: ""
@@ -16,10 +15,9 @@ import { faCamera, faTable, faQuoteLeft } from '@fortawesome/free-solid-svg-icon
 
 [Updated 10th January 2019](#update)
 
-This project came about as part of a part-time MSc in Data Science I was undertaking at Aston University. This was a sponsored programme through my 
-workplace that offered the chance to study Data Science modules part-time at your own pace with a chance to complete an MSc if enough modules were 
-completed. The module in question was ‘Understanding Data’ which was an introductory module aimed to convey a high level of understanding of the 
-data analytics process. The final assessment was to use the techniques described in the module to solve a business problem of my own choosing.
+This project came about as part of a Data Science course I was undertaking. The module in question was ‘Understanding Data’ which was an introductory 
+module aimed to convey a high level of understanding of the data analytics process. The final assessment was to use the techniques described in the 
+module to solve a business problem of my own choosing.
 
 ## The problem
 
@@ -686,12 +684,6 @@ training data, and any biases inherent in it will emerge. I was the only person 
 good and bad news. A better approach would have been to get multiple people from different backgrounds and political standpoints to label the data and 
 reach some sort of consensus.
 
-## The Good News Web Site
-
-The data exists as a SQL Server database hosted in Azure. A .NET core application was created which uses Entity Framework Core as the data layer. Due to 
-the lack of definitive results produced by the models, a model has not been productionised. Instead, the application simply uses threshold values to 
-return high sentiment and positive emotion articles.
-
 ## Good News 2.0
 
 To try and rectify this issue I’m currently collecting more data and doing some feature engineering to try and create a better training set to produce 
@@ -706,7 +698,7 @@ techniques established in the [Good or Bad section](#good).
 Alongside this work more articles are being labelled, particularly good news articles to try and balance the datasets and prevent biased results. This 
 is currently ongoing so stay tuned for the results!
 
-## 🆙 Good News v2.0 is live
+## 🆙 Good News v2.0
 <a name="update"></a>
 
 A substantial dataset is now available that contains the new features. A random forest model has given the best accuracy and it utilises some of the 
@@ -737,9 +729,6 @@ threshold to only select articles where the confidence is high. These articles a
 <figcaption>
     <FontAwesomeIcon icon={faCamera} /> Updated data pipeline.
 </figcaption>
-
-[Version 2 of the site](https://goodnws.azurewebsites.net/) now allows users to flag articles that they don’t consider to be good news. I use this as a 
-kind of ‘crowd sourcing’ way to label the dataset further to keep improving the accuracy of the model.
 
 ## References
 <a name="references"></a>
