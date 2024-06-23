@@ -15,10 +15,10 @@ export default () => (
                 <a href="https://www.credly.com/badges/8c738ab3-2984-4849-86e9-b060ce6dce74/public_url">
                     <img src={Az900Badge} alt="azure fundamentals microsoft certified badge" className={styles.badgeImage} />
                 </a>
-                <a href="https://www.credly.com/badges/6d0559ff-e8cf-48a4-9a5e-eccc5fbd7f62/public_url">
+                <a href="https://learn.microsoft.com/api/credentials/share/en-us/PeterOConnor-3626/9C8BB3E6719E218E?sharingId=3EF481FD1B323A0B">
                     <img src={Dp900Badge} alt="azure data fundamentals microsoft certified badge" className={styles.badgeImage} />
                 </a>
-                <a href="https://www.credly.com/badges/993e087f-3a53-48ae-8fb3-c71c1788a0eb/public_url">
+                <a href="https://learn.microsoft.com/api/credentials/share/en-us/PeterOConnor-3626/235CEA0E69208F28?sharingId=3EF481FD1B323A0B">
                     <img src={Az204Badge} alt="azure developer associate microsoft certified badge" className={styles.badgeImage} />
                 </a>
             </Col>
