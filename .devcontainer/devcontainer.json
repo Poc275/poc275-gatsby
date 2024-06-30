@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/docker-existing-dockerfile
 {
-	"name": "Existing Dockerfile",
+	"name": "poc275-devctr",
 	"build": {
 		// Sets the run context to one level up instead of the .devcontainer folder.
 		"context": "..",
@@ -16,12 +16,12 @@
 	"forwardPorts": [8000],
 
 	// Uncomment the next line to run commands after the container is created.
-	"postCreateCommand": "npm install",
+	// "postCreateCommand": "npm install",
 
-	"postStartCommand": "npm start"
+	// "postStartCommand": "npm start"
 
 	// lets you override the statup command inside your Dockerfile instead
-	// "overrideCommand": false
+	"overrideCommand": false,
 
 	// Configure tool-specific properties.
 	// "customizations": {},
@@ -29,6 +29,10 @@
 	// Uncomment to connect as an existing user other than the container default. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "devcontainer"
 
+	// bind mount hides the contents of the /home/app in the container
+	// i.e. no node_modules from npm install stage are visible
 	// "workspaceMount": "source=${localWorkspaceFolder},target=/home/app,type=bind",
-	// "workspaceFolder": "/home/app"
+	// change to a volume instead to prevent any hiding
+	"workspaceMount": "source=poc275-devctr-vol,target=/home/app,type=volume",
+	"workspaceFolder": "/home/app"
 }
