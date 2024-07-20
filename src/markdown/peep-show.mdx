@@ -41,8 +41,8 @@ visualisation on the show.
 ### Data Gathering
 
 > <FontAwesomeIcon icon={faQuoteLeft} /> Don't give me mottoes, Jeremy, I want figures, data.
->
-> <cite>Mark &mdash; Series 3, Episode 3.</cite>
+> <br />
+> <cite>Mark &mdash; Shrooming (series 3, episode 3)</cite>
 
 I had to scrape together the script data from various online sources and by watching the series (again), but hey, there's **always** a bit of manual work 
 involved in any good data viz project! I collected the lines, marking internal lines separately as one of my earliest ideas was to see how much Mark and Jez 
@@ -50,6 +50,11 @@ spent with their internal thoughts, so this was a vital piece of data. I also co
 analysis. Who was being spoken to was also collected as I thought it would be interesting to see the breakdown of conversations.
 
 ### Visualisation
+
+> <FontAwesomeIcon icon={faQuoteLeft} /> I got something up on my visual display unit this morning, Mark. I thought it was a high-definition photo of some dog s***. Then 
+> I took a closer look, and I realised it was actually your sales record.
+> <br />
+> <cite>Johnson &mdash; The William Morris Years (series 9, episode 1)</cite>
 
 With such a large amount of data there wasn't going to be a single chart type that would accurately reflect it all. Instead, my idea was to break down the data into lower 
 levels of granularity starting from overall conversation flows, then to lines, then sentences and finally down to individual words. This approach was inspired by the 
@@ -59,6 +64,10 @@ work. The [accompanying news article](http://www.impossible-bureau.com/news/wind
 how the site was created along with some screenshots.
 
 #### Structure
+
+> <FontAwesomeIcon icon={faQuoteLeft} /> Looks like I've got a job interview lined up, bathroom supplies. Incredibly flat management structure, which is cool.
+> <br />
+> <cite>Mark &mdash; Jeremy Therapised (series 8, episode 1)</cite>
 
 With a large dataset such as this, which requires focusing in on different parts of the data and utilising different visualisation techniques, the overall structure was 
 going to be important. I could have kept it as a simple web page with text descriptions alongside the visualisations but I felt I could do something more interactive. This 
@@ -90,6 +99,10 @@ hopefully become the standards compliant way of achieving such things going forw
 #### Conversations
 <a name="chords"></a>
 
+> <FontAwesomeIcon icon={faQuoteLeft} /> Conversation is rubbish. You could literally waste years talking to someone and never get the bottom line.
+> <br />
+> <cite>Mark &mdash; Dance Class (series 2, episode 1)</cite>
+
 I thought a chord diagram would be a good way to visualise the conversation flows between the characters. This would show who spoke with whom the most and interestingly, 
 how long Mark and Jez spent in their own thoughts. They are particularly good when visualising asymmetric flows as your eye is immediately drawn to a chord that narrows.
 
@@ -113,6 +126,15 @@ gradient.
 All that was left was some tidying up and using the scroll-interaction to reveal the chart gradually to aid the user in making sense of the data.
 
 #### Mark and Jez
+
+> <FontAwesomeIcon icon={faQuoteLeft} /> Aww, we do love each other really.
+
+<blockquote className="quote-response"><FontAwesomeIcon icon={faQuoteLeft} /> I simply must get rid of him.</blockquote>
+
+<cite>Jeremy & Mark &mdash; Are We Going to Be Alright? (series 9, episode 6)</cite>
+
+<br />
+<br />
 
 The only negative I could see with the chords was the skew towards Mark and Jez. They dominate the chart making it hard to pick out the other characters. This shouldn't have 
 been a surprise. Due to the unique way Peep Show is made, Mark and Jez are involved in almost every single line, but the chart made it clear that the lines for 
@@ -141,6 +163,10 @@ often the most amusing lines in the show. Finally, the top nouns reflect the gen
 
 #### Sentences
 
+> <FontAwesomeIcon icon={faQuoteLeft} /> Not even sure where you'd sign it. Is that meant to be a dotted line? Who drew this up? A lot of these aren't proper sentences.
+> <br />
+> <cite>Mark &mdash; Spin War (series 5, episode 2)</cite>
+
 The next level down was to analyse the individual sentences. I had the idea at the beginning of the project to do some sentiment analysis to see which characters exhibit 
 which emotions (is Mark always angry and stressed? Is Jez always laid back?), so this seemed the ideal place to do this. Natural language processing (NLP) is difficult, even 
 more so when subtle comedy irony is involved, so for time's sake the initial version uses the [nltk Python package](https://www.nltk.org/) to get a simple overall 
@@ -166,6 +192,10 @@ in the mass.
 
 #### Words
 
+> <FontAwesomeIcon icon={faQuoteLeft} /> You'll say anything won't you? Words don't mean a thing to you do they?
+> <br />
+> <cite>Mark &mdash; Sistering (series 3, episode 4)</cite>
+
 Finally, we get to the individual words. This section needs more work. I started by finding the most commonly used words throughout the series. This involved removing any 
 stop words (such as “a”, “the”, “is”, “are” etc.) to try and find actual, interesting words instead of the most common words used in everyday parlance. The first series 
 looked OK, words like “really”, “maybe”, “fine”, “actually”, “sure” portrayed, to me at least, a sense of ambiguity as a result of the conflict between Mark and Jez’s internal 
@@ -183,11 +213,19 @@ phrases. Plus, some of the lines are hilarious when taken out of context.
 #### Alpha Release
 <a name="alpha"></a>
 
+> <FontAwesomeIcon icon={faQuoteLeft} /> He's an alpha male, Jeremy, and you'd be the first to admit you're a bottom-feeder.
+> <br />
+> <cite>Big Suze &mdash; Conference (series 4, episode 2)</cite>
+
 The [initial alpha release](/peep-show-viz) is now available for testing and [feedback](https://github.com/Poc275/peep-show-viz/issues/new). There are issues with the responsive layout (it has only been tested on a 1920x1080 desktop screen), media 
 playback pausing, transitions not completing during scrolling and transitioning between visuals when scrolling back up screen. There are also features I want to change and some 
 new visualisations to incorporate.
 
 ##### Main Menu
+
+> <FontAwesomeIcon icon={faQuoteLeft} /> Oh God, this is terrifying. Just me and the public and some laminated menus for protection.
+> <br />
+> <cite>Mark &mdash; The Affair (series 6, episode 4)</cite>
 
 With such a large amount of data it made sense to focus in on the individual series to break it down (although I'd still like to visualise how the characters developed 
 over the entire show somehow). A menu of some kind was therefore needed to navigate between each series. An accordion layout was the initial idea but I decided against this 
@@ -204,6 +242,10 @@ is required is a subtle menu bar which enables users to explore the data and fli
 
 ##### Locations
 
+> <FontAwesomeIcon icon={faQuoteLeft} /> Yeah, OK, off to the toilet, have a wee and then back in. I could walk quicker, but it's interesting to note that I'm not. I'm walking at what I would describe in court as a normal pace, but which I think is actually slightly slower than normal. There's the toilet. Hmm, why didn't I go in? Here I go, into here. OK, this is interesting, where am I going now?
+> <br />
+> <cite>Mark &mdash; St Hospitals (series 7, episode 1)</cite>
+
 I still haven't found a satisfactory way of visualising the location part of the data, which shows where abouts the line was said. I thought it could be interesting to see 
 how many lines were based inside the flat (the flat is almost a character in itself) compared to outside. My first idea was to use a kind of radial bubble chart where each 
 bubble was a location sized by the number of lines. You could then visualise how each episode progressed by reading around the circumference. Unfortunately, I didn't think 
@@ -216,6 +258,10 @@ anything useful. Back to the drawing board on this.
 </figcaption>
 
 ##### Timeline
+
+> <FontAwesomeIcon icon={faQuoteLeft} /> Look, dude, Zahra's gonna call back. But, you know, until she does, we're in the Nether Zone, yeah? Time moves at a different speed in the Nether Zone.
+> <br />
+> <cite>Jeremy &mdash; St Hospitals (series 7, episode 4)</cite>
 
 I had included a simple timeline visualisation which shows where characters appear and for how long. Again, I wasn't convinced this portrayed enough detail, plus finding 
 out which characters appeared in which episodes could be deduced from some of the other visuals. The plan is to somehow modify this to visualise character's development 
@@ -233,6 +279,10 @@ over the entire show.
 </figcaption>
 
 ##### Other Ideas
+
+> <FontAwesomeIcon icon={faQuoteLeft} /> Oh, great, that's brilliant. F*** the agreement. F*** the Geneva Convention. F*** Parliamentary democracy. F*** everything. Is that your great new idea?
+> <br />
+> <cite>Mark &mdash; Quantocking II (series 8, episode 6)</cite>
 
 I have some other ideas for visualisations that I'd like to add in the future such as vocabulary; I suspect Mark is the better wordsmith, is this true? More “inner thoughts” 
 analysis such as which characters cause Mark and Jez to ruminate the most. Some grammar analysis and the question every Peep Show fan wants the answer to, the number 
