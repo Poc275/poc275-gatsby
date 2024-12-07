@@ -6,6 +6,7 @@ import styles from './badges.module.scss'
 import Az900Badge from '../images/microsoft-certified-azure-fundamentals.png'
 import Az204Badge from '../images/microsoft-certified-azure-developer-associate.1.png'
 import Dp900Badge from '../images/microsoft-certified-azure-data-fundamentals.png'
+import Az400Badge from '../images/microsoft-certified-devops-engineer.png'
 
 export default () => (
     <Container fluid={true} id="badges" className={styles.badges}>
@@ -20,6 +21,9 @@ export default () => (
                 </a>
                 <a href="https://learn.microsoft.com/api/credentials/share/en-us/PeterOConnor-3626/235CEA0E69208F28?sharingId=3EF481FD1B323A0B">
                     <img src={Az204Badge} alt="azure developer associate microsoft certified badge" className={styles.badgeImage} />
+                </a>
+                <a href="https://learn.microsoft.com/api/credentials/share/en-us/PeterOConnor-3626/B4F295271A13168F?sharingId=3EF481FD1B323A0B">
+                    <img src={Az400Badge} alt="azure devops engineer microsoft certified badge" className={styles.badgeImage} />
                 </a>
             </Col>
         </Row>
